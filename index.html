@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mi página web</title>
+
+    <!-- Bootstrap 5 -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <!-- Bootstrap Icons -->
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    >
+
+    <style>
+        :root {
+            --azul: #0057B8;
+            --azul-oscuro: #002B5B;
+            --negro: #08090A;
+            --celeste: #29B6F6;
+            --celeste-claro: #81D4FA;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: var(--negro);
+        }
+
+        /* =========================================
+           ENCABEZADO
+        ========================================= */
+
+        .encabezado {
+            min-height: 380px;
+            padding: 80px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+
+            background: linear-gradient(
+                135deg,
+                #000000 0%,
+                #002B5B 35%,
+                #0057B8 65%,
+                #29B6F6 100%
+            );
+
+            color: white;
+        }
+
+        .encabezado-contenido {
+            max-width: 900px;
+        }
+
+        .encabezado h1 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 800;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+        }
+
+        .encabezado p {
+            font-size: 1.25rem;
+            color: #E3F7FF;
+            margin: 0;
+        }
+
+        /* =========================================
+           BLOQUES
+        ========================================= */
+
+        .bloque {
+            min-height: 420px;
+            padding: 70px 8%;
+            display: flex;
+            align-items: center;
+        }
+
+        .contenido {
+            max-width: 1150px;
+            width: 100%;
+            margin: auto;
+        }
+
+        .texto {
+            color: white;
+        }
+
+        .texto h2 {
+            font-weight: 700;
+            font-size: 2.3rem;
+            margin-bottom: 20px;
+        }
+
+        .texto p {
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        .imagen {
+            width: 100%;
+            max-width: 450px;
+            height: 280px;
+            object-fit: cover;
+            border-radius: 20px;
+
+            border: 3px solid rgba(255, 255, 255, 0.35);
+
+            box-shadow:
+                0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        /* =========================================
+           PALETA
+        ========================================= */
+
+        .azul {
+            background-color: var(--azul);
+        }
+
+        .negro {
+            background-color: var(--negro);
+        }
+
+        .azul-oscuro {
+            background-color: var(--azul-oscuro);
+        }
+
+        .celeste {
+            background-color: var(--celeste);
+        }
+
+        /* =========================================
+           SECCIÓN GITHUB
+        ========================================= */
+
+        .github {
+            min-height: 330px;
+            padding: 70px 20px;
+
+            text-align: center;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            background: linear-gradient(
+                135deg,
+                #000000,
+                #002B5B,
+                #0057B8
+            );
+
+            color: white;
+        }
+
+        .github i.logo-github {
+            font-size: 80px;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .github h2 {
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .github p {
+            max-width: 650px;
+            margin-bottom: 25px;
+            color: #DDF6FF;
+        }
+
+        .github .btn {
+            padding: 12px 28px;
+            font-weight: bold;
+            border-radius: 30px;
+
+            color: #002B5B;
+            background-color: white;
+            border: none;
+        }
+
+        .github .btn:hover {
+            background-color: var(--celeste-claro);
+            color: #000;
+        }
+
+        /* =========================================
+           RESPONSIVE
+        ========================================= */
+
+        @media (max-width: 768px) {
+
+            .encabezado {
+                min-height: 300px;
+                padding: 60px 20px;
+            }
+
+            .encabezado h1 {
+                font-size: 3rem;
+            }
+
+            .encabezado p {
+                font-size: 1rem;
+            }
+
+            .bloque {
+                padding: 55px 7%;
+                text-align: center;
+            }
+
+            .texto h2 {
+                font-size: 2rem;
+            }
+
+            .texto p {
+                font-size: 1rem;
+            }
+
+            .imagen {
+                margin-top: 25px;
+                height: 220px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- =========================================
+         ENCABEZADO
+    ========================================= -->
+
+    <header class="encabezado">
+        <div class="encabezado-contenido">
+
+            <!-- ESCRIBE TU NOMBRE AQUÍ -->
+            <h1>Bautista Alejandro Cafferata</h1>
+
+            <p>
+                Desarrollador de Software y entusiasta de la tecnología. Bienvenido a mi página web personal, donde comparto mis proyectos, habilidades y experiencias.
+            </p>
+
+        </div>
+    </header>
+
+
+    <!-- =========================================
+         BLOQUE 1 - AZUL
+    ========================================= -->
+
+    <section class="bloque azul">
+        <div class="contenido">
+
+            <div class="row align-items-center g-5">
+
+                <div class="col-md-6 texto">
+                    <h2>Bienvenido a mi página</h2>
+
+                    <p>
+                        Es muy probable que no me conozcas, hasta ahora. Dejame por ello presentarme. Estoy seguro de que no te vas a arrepentir. Creeme...
+                    </p>
+                </div>
+
+                <div class="col-md-6 text-center">
+                    <img
+                        src="https://encorerecords.ca/cdn/shop/products/81Gt43HvrKL._SL1500_41da55d2-f462-4a12-8ea3-2e5d20d2a4b3.jpg?v=1618418183&width=1445"
+                        alt="Imagen de bienvenida"
+                        class="imagen"
+                    >
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- =========================================
+         BLOQUE 2 - NEGRO
+    ========================================= -->
+
+    <section class="bloque negro">
+        <div class="contenido">
+
+            <div class="row align-items-center g-5 flex-md-row-reverse">
+
+                <div class="col-md-6 texto">
+                    <h2>Sobre mí</h2>
+
+                    <p>
+                        Soy una persona completamente sana, que no sufre de ninguna enfermedad, trastorno ni discapacidad. No fumo, no consumo estupefacientes, pero sí alcohol, ocasionalmente.
+                    </p>
+                </div>
+
+                <div class="col-md-6 text-center">
+                    <img
+                        src="https://c8.alamy.com/comp/J0BEB1/vnimisen-lht-vinminens-departure-is-a-finnish-painting-depicting-a-J0BEB1.jpg"
+                        alt="Sobre mí"
+                        class="imagen"
+                    >
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- =========================================
+         BLOQUE 3 - CELESTE
+    ========================================= -->
+
+    <section class="bloque celeste">
+        <div class="contenido">
+
+            <div class="row align-items-center g-5">
+
+                <div class="col-md-6 texto">
+                    <h2>Mis capacidades</h2>
+
+                    <p>
+                        Soy principalmente un programador. Tengo conocimientos en lenguajes y tecnologias como C++, C#, HTML, CSS, JavaScript, SQLServer, Bash. Además, comprendo cómo usar Linux y Windows, desde su funcionamiento y administración, incluyendo sus respectivas Shells. Uso multiples herramientas como VS Code, Github, Nano, Vim, entre otras.
+                    </p>
+                </div>
+
+                <div class="col-md-6 text-center">
+                    <img
+                        src="https://i.pinimg.com/originals/95/7b/dd/957bdd4d797dee8415ecbf5f176443c9.jpg"
+                        alt="Mis habilidades"
+                        class="imagen"
+                    >
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- =========================================
+         BLOQUE 4 - AZUL OSCURO
+    ========================================= -->
+
+    <section class="bloque azul-oscuro">
+        <div class="contenido">
+
+            <div class="row align-items-center g-5 flex-md-row-reverse">
+
+                <div class="col-md-6 texto">
+                    <h2>Mis proyectos</h2>
+
+                    <p>
+                        No tengo proyectos publicados, pero sí tengo varios proyectos en desarrollo y algunos que he perdido a lo largo del tiempo. Algunos de ellos son: un programa para el control de asistencias de una institución educativa, un sistema de gestión de inventario, una página web que simula/visualiza documentos comerciales segun la legislación argentina, y otros aun en desarrollo. Estoy trabajando en mejorar mis habilidades y conocimientos para poder llevar a cabo estos proyectos y hacerlos realidad.
+                    </p>
+                </div>
+
+                <div class="col-md-6 text-center">
+                    <img
+                        src="https://i0.wp.com/historiaencomentarios.com/wp-content/uploads/2017/01/rr-ee-vv.jpg?fit=1600%2C1080&ssl=1"
+                        alt="Mis proyectos"
+                        class="imagen"
+                    >
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- =========================================
+         BLOQUE 5 - AZUL
+    ========================================= -->
+
+    <section class="bloque azul">
+        <div class="contenido">
+
+            <div class="row align-items-center g-5">
+
+                <div class="col-md-6 texto">
+                    <h2>Innovación</h2>
+
+                    <p>
+                        En general prefiero siempre desarrollar proyectos, programas y tecnologías que satisfagan necesidades y solucionen problemas reales, visibles y de interes general. Creo firmemente que el ser humano trabaja en la tecnología, no para vivir de ella o ignorar la necesidad de esforzarse, sino para mejorar la calidad de vida de todas las personas del planeta y contribuir a la plenitud de todos los individuos. La innovación es un proceso constante de aprendizaje, experimentación y mejora, y estoy comprometido a seguir explorando nuevas ideas y enfoques para crear soluciones que tengan un impacto positivo en la sociedad.
+                    </p>
+                </div>
+
+                <div class="col-md-6 text-center">
+                    <img
+                        src="https://unifranz.edu.bo/wp-content/uploads/2025/03/BLOG-NUEVA-ERA-EN-SALUD-FOTO-1.png"
+                        alt="Innovación"
+                        class="imagen"
+                    >
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- =========================================
+         BLOQUE 6 - NEGRO
+    ========================================= -->
+
+    <section class="bloque negro">
+        <div class="contenido">
+
+            <div class="row align-items-center g-5 flex-md-row-reverse">
+
+                <div class="col-md-6 texto">
+                    <h2>Experiencia</h2>
+
+                    <p>
+                        Exceptuando los proyectos anteriormente mencionados, no tengo ninguna clas de experiencia laboral. Sin embargo, soy capaz de aprender e integrarme rapidamente a distintos entornos de trabajo.
+                    </p>
+                </div>
+
+                <div class="col-md-6 text-center">
+                    <img
+                        src="https://loff.it/wp-content/uploads/2013/01/aun-aprendo-1824-1828-lapiz-sobre-papel-verjurado-grisaceo-madrid-museo-nacional-del-prado.jpg"
+                        alt="Experiencia"
+                        class="imagen"
+                    >
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- =========================================
+         BLOQUE 7 - CELESTE
+    ========================================= -->
+
+    <section class="bloque celeste">
+        <div class="contenido">
+
+            <div class="row align-items-center g-5">
+
+                <div class="col-md-6 texto">
+                    <h2>Mis objetivos</h2>
+
+                    <p>
+                        Actualmente, tengo en mente aprender todas las tecnologías y herramientas necesarias para cumplir el rol de DevOps, y poder desempeñarme en ese ámbito. Mi objetivo es adquirir experiencia y conocimientos en el desarrollo de software, la administración de sistemas y la automatización de procesos, para poder contribuir al éxito de los proyectos en los que participe.
+                    </p>
+                </div>
+
+                <div class="col-md-6 text-center">
+                    <img
+                        src="https://i.pinimg.com/originals/ef/27/35/ef27354c7728ffc4889c8e991d19c201.png"
+                        alt="Mis objetivos"
+                        class="imagen"
+                    >
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- =========================================
+         BLOQUE 8 - AZUL OSCURO
+    ========================================= -->
+
+    <section class="bloque azul-oscuro">
+        <div class="contenido">
+
+            <div class="row align-items-center g-5 flex-md-row-reverse">
+
+                <div class="col-md-6 texto">
+                    <h2>Contacto</h2>
+
+                    <p>
+                        Este bloque puede utilizarse para invitar al visitante
+                        a ponerse en contacto contigo, conocer más sobre tus
+                        proyectos o visitar tus diferentes plataformas.
+                    </p>
+                </div>
+
+                <div class="col-md-6 text-center">
+                    <img
+                        src="https://media1.tenor.com/m/mneJdPL_PK8AAAAd/blackbeard-black.gif"
+                        alt="Contacto"
+                        class="imagen"
+                    >
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- =========================================
+         SECCIÓN EXTRA - GITHUB
+    ========================================= -->
+
+    <section class="github">
+
+        <!-- Logo de GitHub -->
+        <i
+            class="bi bi-github logo-github"
+            aria-hidden="true"
+        ></i>
+
+        <h2>Mi repositorio</h2>
+
+        <p>
+            Puedes consultar el código fuente de mis proyectos,
+            explorar mis trabajos y conocer más sobre lo que estoy
+            desarrollando.
+        </p>
+
+        <!-- CAMBIA ESTA URL POR TU REPOSITORIO -->
+        <a
+            href="https://github.com/MacTonight69"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn btn-light"
+        >
+            <i class="bi bi-github me-2"></i>
+            Ver repositorio
+        </a>
+
+    </section>
+
+
+    <!-- Bootstrap JavaScript -->
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    ></script>
+
+</body>
+</html>
