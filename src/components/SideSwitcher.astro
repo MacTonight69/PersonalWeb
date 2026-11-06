@@ -1,0 +1,20 @@
+---
+interface Props {
+  side: 'a' | 'b';
+}
+
+const { side } = Astro.props;
+const isSideA = side === 'a';
+const href = isSideA ? '/side-b' : '/';
+const label = isSideA ? 'Side A' : 'Side B';
+const target = isSideA ? 'Side B' : 'Side A';
+---
+
+<a
+  class="side-switcher"
+  href={href}
+  aria-label={`Cambiar a ${target}`}
+  title={`Cambiar a ${target}`}
+>
+  {label}
+</a>

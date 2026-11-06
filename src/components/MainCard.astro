@@ -1,0 +1,33 @@
+---
+import HeaderCard from './HeaderCard.astro';
+import LeftCard from './LeftCard.astro';
+import CenterCard from './CenterCard.astro';
+import RightCard from './RightCard.astro';
+
+interface Props {
+  side?: 'a' | 'b';
+}
+
+const { side = 'b' } = Astro.props;
+const isSideA = side === 'a';
+---
+
+<main class="main-card">
+  <HeaderCard
+    bannerSrc={isSideA
+      ? '/images/banner_glitch_CA.svg'
+      : '/images/banner-placeholder.svg'}
+    bannerAlt="Banner de la página"
+  />
+  <LeftCard
+    profileSrc={isSideA
+      ? '/media/PFP_Side_A.gif'
+      : '/images/profile-placeholder.svg'}
+    profileAlt="Imagen de perfil"
+    profileWidth={isSideA ? 500 : 120}
+    profileHeight={isSideA ? 370 : 120}
+    profileFullWidth={isSideA}
+  />
+  <CenterCard />
+  <RightCard />
+</main>

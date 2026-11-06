@@ -1,0 +1,30 @@
+---
+import '../styles/global.css';
+import SideSwitcher from '../components/SideSwitcher.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Página personal',
+  description = 'Página personal',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+  </head>
+  <body class="side-b">
+    <SideSwitcher side="b" />
+    <slot />
+  </body>
+</html>

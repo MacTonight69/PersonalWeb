@@ -1,0 +1,70 @@
+---
+const sections = [
+  { label: 'Perfil Profesional', href: '/perfil-profesional' },
+  { label: 'Formación', href: '/formacion' },
+  { label: 'Tecnologías', href: '/tecnologias' },
+  { label: 'Proyectos', href: '/proyectos' },
+  { label: 'Organización', href: '/organizacion' },
+  { label: 'Vista a futuro', href: '/vista-a-futuro' },
+];
+---
+
+<nav class="card card--right nav-card" aria-label="Navegación principal">
+  <h2 class="nav-card__title">NAVY</h2>
+
+  <ul class="nav-card__list">
+    {
+      sections.map(({ label, href }) => (
+        <li class="nav-card__item">
+          <a class="nav-card__link" href={href} data-section-link>
+            {label}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>
+
+<style>
+  .nav-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .nav-card__title {
+    margin: 0;
+    font-size: clamp(2rem, 3vw, 3rem);
+    line-height: 1;
+    letter-spacing: 0.08em;
+    color: var(--color-title);
+  }
+
+  .nav-card__list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .nav-card__link {
+    display: inline-block;
+    padding-block: 0.25rem;
+    color: var(--color-title);
+    text-decoration: none;
+  }
+
+  .nav-card__link:hover,
+  .nav-card__link:focus-visible {
+    color: var(--color-text);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .nav-card__link:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+</style>

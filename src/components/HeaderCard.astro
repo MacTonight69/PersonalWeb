@@ -1,0 +1,41 @@
+---
+interface Props {
+  bannerSrc?: string;
+  bannerAlt?: string;
+  bannerWidth?: number;
+  bannerHeight?: number;
+}
+
+const {
+  bannerSrc = '/images/banner-placeholder.svg',
+  bannerAlt = 'Banner de la página',
+  bannerWidth = 1600,
+  bannerHeight = 400,
+} = Astro.props;
+---
+
+<header class="card card--header header-card">
+  <img
+    class="header-card__banner"
+    src={bannerSrc}
+    alt={bannerAlt}
+    width={bannerWidth}
+    height={bannerHeight}
+    loading="eager"
+  />
+</header>
+
+<style>
+  .header-card {
+    position: relative;
+    padding: 0;
+  }
+
+  .header-card__banner {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: var(--header-banner-fit, cover);
+  }
+</style>

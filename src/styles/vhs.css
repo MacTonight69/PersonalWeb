@@ -1,0 +1,219 @@
+/* =========================================================
+   Filtro VHS — Side A
+   ========================================================= */
+
+:root {
+  --vhs-scanline-opacity: 0.16;
+  --vhs-noise-opacity: 0.08;
+  --vhs-flicker-opacity: 0.035;
+  --vhs-aberration-offset: 1px;
+  --vhs-tracking-opacity: 0.16;
+}
+
+.vhs-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.vhs-overlay > * {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* Líneas horizontales de monitor CRT */
+.vhs-overlay__scanlines {
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(38, 97, 156, 0.5) 0,
+    rgba(38, 97, 156, 0.5) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+  opacity: var(--vhs-scanline-opacity);
+  animation: vhs-scanlines-drift 9s linear infinite;
+}
+
+/* Ruido analógico */
+.vhs-overlay__noise {
+  inset: -10%;
+  background-image: url("/textures/vhs-noise.svg");
+  background-size: 180px 180px;
+  opacity: var(--vhs-noise-opacity);
+  mix-blend-mode: screen;
+  animation: vhs-noise-shift 0.4s steps(2, end) infinite;
+  will-change: transform;
+}
+
+/* Aberración cromática sutil en bordes y zonas de contraste */
+.vhs-overlay__aberration {
+  background:
+    linear-gradient(
+      90deg,
+      rgba(255, 0, 70, 0.05) 0,
+      transparent 1.5%,
+      transparent 98.5%,
+      rgba(0, 200, 255, 0.05) 100%
+    );
+  box-shadow:
+    inset var(--vhs-aberration-offset) 0 0 rgba(255, 0, 70, 0.09),
+    inset calc(var(--vhs-aberration-offset) * -1) 0 0
+      rgba(0, 200, 255, 0.09);
+  mix-blend-mode: screen;
+  opacity: 0.8;
+}
+
+/* Parpadeo irregular */
+.vhs-overlay__flicker {
+  background: #9dc7f0;
+  opacity: 0;
+  mix-blend-mode: soft-light;
+  animation: vhs-flicker 9s steps(1, end) infinite;
+}
+
+/* Bandas de tracking ocasionales */
+.vhs-overlay__tracking::before,
+.vhs-overlay__tracking::after {
+  content: "";
+  position: absolute;
+  left: -5%;
+  width: 110%;
+  height: 9vh;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(157, 199, 240, 0.2),
+    transparent
+  );
+  filter: blur(1px);
+  opacity: 0;
+  animation: vhs-tracking 11s linear infinite;
+  will-change: transform, opacity;
+}
+
+.vhs-overlay__tracking::after {
+  height: 5vh;
+  animation-delay: 5.5s;
+  animation-duration: 13s;
+}
+
+/* =========================================================
+   Animaciones
+   ========================================================= */
+
+@keyframes vhs-scanlines-drift {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(4px);
+  }
+}
+
+@keyframes vhs-noise-shift {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  25% {
+    transform: translate(-2%, 1%);
+  }
+
+  50% {
+    transform: translate(1%, -2%);
+  }
+
+  75% {
+    transform: translate(-1%, 2%);
+  }
+
+  100% {
+    transform: translate(2%, -1%);
+  }
+}
+
+@keyframes vhs-flicker {
+  0%,
+  7%,
+  9%,
+  24%,
+  26%,
+  48%,
+  51%,
+  72%,
+  74%,
+  100% {
+    opacity: 0;
+  }
+
+  8% {
+    opacity: var(--vhs-flicker-opacity);
+  }
+
+  25% {
+    opacity: calc(var(--vhs-flicker-opacity) * 0.7);
+  }
+
+  49% {
+    opacity: var(--vhs-flicker-opacity);
+  }
+
+  73% {
+    opacity: calc(var(--vhs-flicker-opacity) * 0.5);
+  }
+}
+
+@keyframes vhs-tracking {
+  0%,
+  68% {
+    transform: translateY(-20vh);
+    opacity: 0;
+  }
+
+  70% {
+    opacity: var(--vhs-tracking-opacity);
+  }
+
+  78% {
+    transform: translateY(110vh);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateY(110vh);
+    opacity: 0;
+  }
+}
+
+/* =========================================================
+   Accesibilidad y otros medios
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .vhs-overlay__scanlines,
+  .vhs-overlay__noise,
+  .vhs-overlay__flicker,
+  .vhs-overlay__tracking::before,
+  .vhs-overlay__tracking::after {
+    animation: none;
+  }
+
+  .vhs-overlay__flicker,
+  .vhs-overlay__tracking {
+    display: none;
+  }
+
+  .vhs-overlay__noise {
+    opacity: calc(var(--vhs-noise-opacity) * 0.5);
+  }
+}
+
+@media print {
+  .vhs-overlay {
+    display: none;
+  }
+}

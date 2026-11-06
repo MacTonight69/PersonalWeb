@@ -1,0 +1,56 @@
+@font-face {
+  font-family: "EASVHS";
+  src: url("/fonts/easvhs.ttf") format("truetype");
+  font-style: normal;
+  font-weight: normal;
+  font-display: swap;
+}
+
+html.side-a-root {
+  color-scheme: dark;
+  background-color: #000000;
+}
+
+body.side-a {
+  --color-background: #000000;
+  --color-surface: #000000;
+  --color-text: #9dc7f0;
+  --color-title: #3b7bc4;
+  --color-border: #26619c;
+  --font-sans: "EASVHS", "Courier New", monospace;
+
+  background-color: var(--color-background);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+}
+
+body.side-a ::selection {
+  background-color: var(--color-border);
+  color: #000000;
+}
+
+html.side-a-skip-intro .side-a-intro {
+  display: none;
+}
+
+@media (max-width: 54rem) {
+  body.side-a {
+    --header-banner-fit: contain;
+  }
+}
+
+.side-a .side-switcher {
+  color: rgba(157, 199, 240, 0.7);
+  background-color: rgba(0, 0, 0, 0.72);
+  border-color: rgba(38, 97, 156, 0.55);
+}
+
+.side-a .side-switcher:hover {
+  color: var(--color-text);
+  background-color: #000000;
+  border-color: var(--color-border);
+}
+
+.side-a .side-switcher:focus-visible {
+  outline-color: var(--color-text);
+}

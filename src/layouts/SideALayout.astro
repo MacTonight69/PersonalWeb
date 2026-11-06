@@ -1,0 +1,72 @@
+---
+import '../styles/global.css';
+import '../styles/side-a.css';
+import SideAIntro from '../components/SideAIntro.astro';
+import SectionTransition from '../components/SectionTransition.astro';
+import VhsOverlay from '../components/VhsOverlay.astro';
+import SideSwitcher from '../components/SideSwitcher.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  showSwitcher?: boolean;
+}
+
+const {
+  title = 'Página personal',
+  description = 'Página personal',
+  showSwitcher = true,
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="es" class="side-a-root">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#000000" />
+    <meta name="generator" content={Astro.generator} />
+    <script is:inline>
+      (() => {
+        try {
+          const key = 'side-a-gif-transition';
+          const raw = sessionStorage.getItem(key);
+          if (!raw) return;
+
+          sessionStorage.removeItem(key);
+          const elapsed = Date.now() - Number(raw);
+
+          if (Number.isFinite(elapsed) && elapsed >= 0 && elapsed < 10000) {
+            document.documentElement.classList.add('side-a-skip-intro');
+          }
+        } catch {
+          // Si sessionStorage no está disponible, se mantiene la entrada completa.
+        }
+      })();
+    </script>
+    <link rel="preload" href="/media/carga_vhs.svg" as="image" />
+    <link rel="preload" href="/media/Intro_Side_A.gif" as="image" />
+    <link
+      rel="preload"
+      href="/fonts/easvhs.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin="anonymous"
+    />
+    <style is:inline>
+      html.side-a-root,
+      html.side-a-root body {
+        background-color: #000;
+      }
+    </style>
+    <title>{title}</title>
+  </head>
+  <body class="side-a">
+    <SideAIntro />
+    <SectionTransition />
+    <VhsOverlay />
+    {showSwitcher && <SideSwitcher side="a" />}
+    <slot />
+  </body>
+</html>
