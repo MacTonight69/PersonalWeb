@@ -62,3 +62,13 @@
   outline: 2px solid var(--color-text);
   outline-offset: 2px;
 }
+
+@media (min-width: 54.0625rem) {
+  .main-card.section-card {
+    height: calc(
+      100dvh - var(--main-card-margin-block-start) -
+        var(--main-card-margin-block-end)
+    );
+    min-height: 0;
+  }
+}

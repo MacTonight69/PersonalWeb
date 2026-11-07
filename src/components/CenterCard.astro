@@ -1,13 +1,90 @@
 <section class="card card--center center-card" aria-labelledby="layer-title">
   <div class="center-card__content">
-    <h1 class="center-card__title" id="layer-title">Layer: 88</h1>
-    <p class="center-card__text">
-      Es posible que esté usted confundido. Tal vaz casi tanto como yo. Si
-      quiere descrubrir quién soy yo, tal vez esta información le sea de ayuda.
-      Tenga cuidado por donde mira: Dios nos está mirando...
+    <h1
+      class="center-card__title typewriter-text"
+      id="layer-title"
+      data-typewriter
+      data-typewriter-speed="88"
+      aria-label="Layer: 88"
+    >
+      <span data-typewriter-content aria-hidden="true">Layer: 88</span>
+    </h1>
+    <p
+      class="center-card__text typewriter-text"
+      data-typewriter
+      data-typewriter-speed="24"
+      aria-label="Es posible que esté usted confundido. Tal vaz casi tanto como yo. Si quiere descrubrir quién soy yo, tal vez esta información le sea de ayuda. Tenga cuidado por donde mira: Dios nos está mirando..."
+    >
+      <span data-typewriter-content aria-hidden="true">
+        Es posible que esté usted confundido. Tal vaz casi tanto como yo. Si
+        quiere descrubrir quién soy yo, tal vez esta información le sea de ayuda.
+        Tenga cuidado por donde mira: Dios nos está mirando...
+      </span>
     </p>
   </div>
 </section>
+
+<script>
+  const typewriterElements = Array.from(
+    document.querySelectorAll<HTMLElement>('[data-typewriter]'),
+  );
+  const intro = document.querySelector<HTMLElement>('.side-a-intro');
+  const reducedMotion = window.matchMedia(
+    '(prefers-reduced-motion: reduce)',
+  ).matches;
+  let hasStarted = false;
+  let sequenceDelay = 0;
+
+  function startTyping() {
+    if (hasStarted) return;
+    hasStarted = true;
+
+    typewriterElements.forEach((element) => {
+      const text = element.querySelector<HTMLElement>(
+        '[data-typewriter-content]',
+      );
+      if (!text) return;
+
+      const fullText = (text.textContent ?? '').replace(/\s+/g, ' ').trim();
+      if (reducedMotion) return;
+
+      const characters = Array.from(fullText);
+      const speed = Number(element.dataset.typewriterSpeed) || 24;
+      const initialDelay = sequenceDelay;
+      sequenceDelay += characters.length * speed + 240;
+      let characterIndex = 0;
+
+      text.textContent = '';
+      element.classList.add('is-typing');
+
+      const typeNextCharacter = () => {
+        if (characterIndex >= characters.length) {
+          element.classList.remove('is-typing');
+          return;
+        }
+
+        text.textContent += characters[characterIndex];
+        characterIndex += 1;
+        window.setTimeout(typeNextCharacter, speed);
+      };
+
+      window.setTimeout(typeNextCharacter, initialDelay);
+    });
+  }
+
+  if (
+    reducedMotion ||
+    !intro ||
+    document.documentElement.classList.contains('side-a-skip-intro') ||
+    getComputedStyle(intro).display === 'none'
+  ) {
+    startTyping();
+  } else {
+    intro.addEventListener('animationend', (event) => {
+      if (event.animationName === 'side-a-intro-dismiss') startTyping();
+    });
+  }
+</script>
 
 <style>
   .center-card {
@@ -33,5 +110,25 @@
     margin: 1rem 0 0;
     font-size: 1.0625rem;
     color: var(--color-text);
+  }
+
+  .typewriter-text.is-typing::after {
+    content: "▌";
+    display: inline-block;
+    margin-left: 0.12em;
+    color: currentColor;
+    animation: typewriter-caret 0.8s steps(1, end) infinite;
+  }
+
+  @keyframes typewriter-caret {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .typewriter-text.is-typing::after {
+      animation: none;
+    }
   }
 </style>

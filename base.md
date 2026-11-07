@@ -1,7 +1,8 @@
 # Base del proyecto — Página personal
 
-**Versión:** 3.2  
-**Estado:** Sitio dividido en Side A y Side B; Side A con ambientación VHS y páginas de sección  
+**Versión:** 3.6
+
+**Estado:** Sitio dividido en Side A y Side B; Side A con ambientación VHS, escritura progresiva en CM, cerebro 3D en la transición interna, cabeza giratoria en CD, páginas de sección y CP adaptable en escritorio
 **Tipo de proyecto:** Sitio web personal estático
 
 ---
@@ -39,7 +40,7 @@ Por el momento, **el texto de contenido es el mismo en ambos lados**. La diferen
 - No se utiliza React ni otro framework de interfaz.
 - No se incorporan bibliotecas externas de diseño.
 - El filtro VHS se implementa con CSS y una textura SVG, sin Canvas ni WebGL.
-- El JavaScript de cliente se limita a tres tareas: retirar la portada de entrada cuando termina su animación, gestionar la transición interna de 0,5 s con el GIF y omitir la portada completa cuando se llega desde una transición interna.
+- El JavaScript de cliente se limita a tareas puntuales: retirar la portada de entrada, escribir progresivamente el título y el texto de CM, gestionar la transición interna de 0,88 s con el SVG y omitir la portada completa cuando se llega desde una transición interna.
 
 ### Dependencias del proyecto
 
@@ -51,6 +52,7 @@ Por el momento, **el texto de contenido es el mismo en ambos lados**. La diferen
 - Fuente `EASVHS` (`easvhs.ttf`), gratuita para uso personal y comercial según indicación del propietario.
 - Animación de carga `carga_vhs.svg`.
 - Introducción `Intro_Side_A.gif`.
+- Transición entre secciones: cerebro giratorio en three.js, con `spinning_brain.svg` como reserva si no hay WebGL.
 - Imagen de perfil `PFP_Side_A.gif`.
 - Banner glitch animado `banner_glitch_CA.svg`.
 
@@ -89,7 +91,7 @@ Cada página contiene únicamente:
 - Un título grande y centrado con el nombre de la sección.
 - El texto `En esta sección se hablará de mi [nombre_sección]`.
 
-Los enlaces de CD llevan el atributo `data-section-link`. Al activarlos, `SectionTransition.astro` muestra únicamente `Intro_Side_A.gif` durante 0,5 segundos antes de navegar. La portada completa de SVG y GIF no se repite en esas transiciones internas.
+Los enlaces de CD llevan el atributo `data-section-link`. Al activarlos, `SectionTransition.astro` muestra un cerebro giratorio renderizado en three.js durante 0,88 segundos antes de navegar (con el SVG como imagen de reserva si falla WebGL). La portada completa de SVG y GIF no se repite en esas transiciones internas.
 
 ---
 
@@ -232,6 +234,8 @@ Los elementos son enlaces reales (`<a>`), no simple texto. Actualmente apuntan a
 
 Estas rutas ya tienen páginas implementadas mediante `src/pages/[section].astro`. Los destinos se definen en el arreglo `sections` de `src/components/RightCard.astro` y se marcan con `data-section-link` para activar la transición GIF.
 
+En Side A, debajo de la lista y separada de ella, CD muestra `public/media/spin_head.svg` ocupando todo el ancho de la tarjeta. Es un SVG animado que se reproduce automáticamente, en bucle y sin controles. En Side B la animación no se muestra, para conservar el diseño claro original.
+
 ---
 
 ## 6. Side A — ambientación VHS
@@ -256,7 +260,9 @@ La secuencia completa de `carga_vhs.svg` + `Intro_Side_A.gif` se reserva para:
 - La entrada inicial a una página de Side A.
 - El regreso a Side A desde Side B.
 
-Las transiciones internas entre `/`, las secciones y `BACK` usan solamente `Intro_Side_A.gif` durante **0,5 segundos**. Para evitar que la portada completa vuelva a ejecutarse al llegar a la página de destino, la transición guarda una marca temporal en `sessionStorage` que el layout consume antes de renderizar la portada.
+Las transiciones internas entre `/`, las secciones y `BACK` usan un **cerebro 3D giratorio en three.js** durante **0,88 segundos**: dos hemisferios con giros procedurales generados por ruido de valor, cisura longitudinal, cerebelo con folias y tronco encefálico, renderizados con superficie oscura oclusiva, anillos de latitud azules y halo radial en la paleta de Side A. El SVG original se conserva como imagen de reserva cuando WebGL no está disponible. Para evitar que la portada completa vuelva a ejecutarse al llegar a la página de destino, la transición guarda una marca temporal en `sessionStorage` que el layout consume antes de renderizar la portada.
+
+En CM, tanto el título **Layer: 88** como el párrafo se escriben carácter por carácter al quedar visible la página. Primero aparece el título y después el párrafo, con un cursor intermitente. Con `prefers-reduced-motion: reduce`, el contenido aparece completo sin animación. El texto completo permanece accesible mediante etiquetas ARIA mientras se reproduce el efecto visual.
 
 ### 6.2. Colores
 
@@ -364,21 +370,24 @@ La distribución se implementa con **CSS Grid** y se adapta mediante media queri
 
 ### Escritorio amplio (más de 1280 px)
 
-- CP mantiene 100 px de margen lateral.
-- Margen superior de 50 px.
+- CP adapta sus márgenes laterales y verticales al tamaño de la ventana.
+- La altura de CP se ajusta al espacio vertical disponible.
 - CA ocupa todo el ancho.
 - CI, CM y CD mantienen la proporción 25 / 50 / 25.
 - La proporción se consigue con `grid-template-columns: 1fr 2fr 1fr`.
+- La imagen de perfil se limita por altura y conserva su proporción para dejar espacio a los campos.
+- Las animaciones de entrada y transición caben en la ventana sin recortar sus imágenes.
 
 ### Portátiles y tabletas grandes (hasta 1280 px)
 
-- El margen lateral se reduce a 64 px (`4rem`).
-- Se conserva la distribución en tres columnas.
+- CP conserva las tres columnas, con márgenes, padding, separación y altura fluidos.
+- En ventanas de hasta 672 px de alto se compactan la imagen de perfil y los campos.
+- En alturas excepcionalmente bajas, CP puede extenderse y permitir scroll antes que recortar información.
 
 ### Tabletas (hasta 1024 px)
 
-- El margen lateral se reduce a 40 px (`2.5rem`).
-- Se conserva la distribución en tres columnas mientras haya espacio suficiente.
+- Se conserva el comportamiento de escritorio hasta el breakpoint de 864 px.
+- Los tamaños de texto y espacios se ajustan gradualmente al ancho y alto de la ventana.
 
 ### Tabletas pequeñas y móviles (hasta 864 px)
 
@@ -416,6 +425,7 @@ PersonalWeb/
 │   ├── media/
 │   │   ├── carga_vhs.svg
 │   │   ├── Intro_Side_A.gif
+│   │   ├── spinning_brain.svg
 │   │   └── PFP_Side_A.gif
 │   └── textures/
 │       └── vhs-noise.svg
@@ -452,7 +462,8 @@ PersonalWeb/
 │   ├── banner_glitch_CA.svg
 │   ├── carga_vhs.svg
 │   ├── Intro_Side_A.gif
-│   └── PFP_Side_A.gif
+│   ├── PFP_Side_A.gif
+│   └── spinning_brain.svg
 ├── fonts/
 │   └── easvhs.ttf
 │
@@ -481,11 +492,11 @@ Los archivos de `resource/` y `fonts/` son los originales de trabajo. El sitio u
 | `src/components/MainCard.astro` | Organiza las cuatro subcards y elige las imágenes según el lado |
 | `src/components/HeaderCard.astro` | Banner superior; acepta imagen y texto alternativo |
 | `src/components/LeftCard.astro` | Imagen de perfil y lista de campos personales |
-| `src/components/CenterCard.astro` | Título y texto de bienvenida |
+| `src/components/CenterCard.astro` | Título y texto de bienvenida con animación de escritura accesible |
 | `src/components/RightCard.astro` | Título NAVY y enlaces de navegación |
 | `src/components/SideSwitcher.astro` | Botón fijo de cambio entre Side A y Side B |
 | `src/components/SideAIntro.astro` | Secuencia completa de carga e introducción de Side A |
-| `src/components/SectionTransition.astro` | Transición interna de 0,5 s usando solo `Intro_Side_A.gif` |
+| `src/components/SectionTransition.astro` | Transición interna de 0,88 s con cerebro 3D en three.js y reserva SVG |
 | `src/components/VhsOverlay.astro` | Capas visuales del filtro VHS |
 | `src/styles/global.css` | Variables, estilos base, distribución de CP y reglas responsive |
 | `src/styles/side-a.css` | Fuente EASVHS, tema oscuro, botón de Side A y omisión de la portada en transiciones |
@@ -551,10 +562,11 @@ El resultado de la compilación se guarda en `dist/`.
 - Side A con fondo negro, bordes y títulos lapislázuli y texto informativo azul claro.
 - Fuente EASVHS aplicada a Side A.
 - Portada de entrada con `carga_vhs.svg` e `Intro_Side_A.gif`.
+- Animación de escritura secuencial para el título y el texto de CM, con alternativa accesible y soporte de movimiento reducido.
 - Imagen de perfil animada en Side A.
 - Filtro VHS exclusivo de Side A con scanlines, ruido, aberración cromática, parpadeo y tracking.
 - Seis páginas de sección con `BACK`, CP, título y texto.
-- Transición interna de 0,5 s con `Intro_Side_A.gif`, sin repetir la portada completa.
+- Transición interna de 0,88 s con cerebro giratorio en three.js, sin repetir la portada completa.
 - Respeto de `prefers-reduced-motion`.
 - Distribución responsive sin desbordamiento horizontal.
 

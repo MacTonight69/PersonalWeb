@@ -1,4 +1,11 @@
 ---
+interface Props {
+  side?: 'a' | 'b';
+}
+
+const { side = 'b' } = Astro.props;
+const isSideA = side === 'a';
+
 const sections = [
   { label: 'Perfil Profesional', href: '/perfil-profesional' },
   { label: 'Formación', href: '/formacion' },
@@ -23,6 +30,22 @@ const sections = [
       ))
     }
   </ul>
+
+  {
+    isSideA && (
+      <div class="nav-card__visual">
+        <img
+          class="nav-card__animation"
+          src="/media/spin_head.svg"
+          alt=""
+          width="960"
+          height="540"
+          loading="eager"
+          decoding="async"
+        />
+      </div>
+    )
+  }
 </nav>
 
 <style>
@@ -66,5 +89,15 @@ const sections = [
   .nav-card__link:focus-visible {
     outline: 2px solid currentColor;
     outline-offset: 2px;
+  }
+
+  .nav-card__visual {
+    width: 100%;
+    margin-top: auto;
+  }
+
+  .nav-card__animation {
+    width: 100%;
+    height: auto;
   }
 </style>
