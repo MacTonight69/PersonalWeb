@@ -6,24 +6,6 @@
       "sourceType": "github",
       "skillPath": "skills/astro-framework/SKILL.md",
       "computedHash": "7d8940b3fb7dab50f8303afdb3210cc9385da3a8d243fe99efdc08ce53aed90c"
-    },
-    "threejs-animation": {
-      "source": "cloudai-x/threejs-skills",
-      "sourceType": "github",
-      "skillPath": "skills/threejs-animation/SKILL.md",
-      "computedHash": "52acf24ba76b47b094e5734622947fcc85deebf2469bb5c8ef77a1f1dcfc3e5c"
-    },
-    "threejs-fundamentals": {
-      "source": "cloudai-x/threejs-skills",
-      "sourceType": "github",
-      "skillPath": "skills/threejs-fundamentals/SKILL.md",
-      "computedHash": "c0293a5eaf5168cdbeb1e9bfc5d5b7aa24396f604a8695b26a72d833c2352108"
-    },
-    "threejs-geometry": {
-      "source": "cloudai-x/threejs-skills",
-      "sourceType": "github",
-      "skillPath": "skills/threejs-geometry/SKILL.md",
-      "computedHash": "cae4d8f02ffe449edbc33a2a9ba79020dcb415e7c187d48ed8ffc166207d2e77"
     }
   }
 }

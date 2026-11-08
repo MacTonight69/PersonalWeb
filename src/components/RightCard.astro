@@ -1,29 +1,35 @@
 ---
+import { sectionNav } from '../content/sections';
+
 interface Props {
   side?: 'a' | 'b';
 }
 
 const { side = 'b' } = Astro.props;
 const isSideA = side === 'a';
-
-const sections = [
-  { label: 'Perfil Profesional', href: '/perfil-profesional' },
-  { label: 'Formación', href: '/formacion' },
-  { label: 'Tecnologías', href: '/tecnologias' },
-  { label: 'Proyectos', href: '/proyectos' },
-  { label: 'Organización', href: '/organizacion' },
-  { label: 'Vista a futuro', href: '/vista-a-futuro' },
-];
 ---
 
-<nav class="card card--right nav-card" aria-label="Navegación principal">
+<nav
+  class:list={[
+    'card',
+    'card--right',
+    'nav-card',
+    { 'nav-card--side-a': isSideA },
+  ]}
+  aria-label="Main navigation"
+>
   <h2 class="nav-card__title">NAVY</h2>
 
   <ul class="nav-card__list">
     {
-      sections.map(({ label, href }) => (
+      sectionNav.map(({ slug, label }) => (
         <li class="nav-card__item">
-          <a class="nav-card__link" href={href} data-section-link>
+          <a
+            class="nav-card__link"
+            href={`/${slug}`}
+            data-section-link
+            data-text={label}
+          >
             {label}
           </a>
         </li>
@@ -73,6 +79,7 @@ const sections = [
   }
 
   .nav-card__link {
+    position: relative;
     display: inline-block;
     padding-block: 0.25rem;
     color: var(--color-title);
@@ -82,13 +89,128 @@ const sections = [
   .nav-card__link:hover,
   .nav-card__link:focus-visible {
     color: var(--color-text);
-    text-decoration: underline;
-    text-underline-offset: 0.2em;
+    text-decoration: none;
   }
 
   .nav-card__link:focus-visible {
     outline: 2px solid currentColor;
     outline-offset: 2px;
+  }
+
+  .nav-card--side-a .nav-card__link::before,
+  .nav-card--side-a .nav-card__link::after {
+    content: attr(data-text);
+    position: absolute;
+    inset: 0;
+    padding-block: 0.25rem;
+    opacity: 0;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  .nav-card--side-a .nav-card__link:hover,
+  .nav-card--side-a .nav-card__link:focus-visible {
+    animation: nav-link-glitch 0.36s steps(2, end) infinite;
+  }
+
+  .nav-card--side-a .nav-card__link:hover::before,
+  .nav-card--side-a .nav-card__link:focus-visible::before,
+  .nav-card--side-a .nav-card__link:hover::after,
+  .nav-card--side-a .nav-card__link:focus-visible::after {
+    opacity: 1;
+  }
+
+  .nav-card--side-a .nav-card__link::before {
+    color: #ff3b3b;
+    text-shadow: 0 0 5px rgba(255, 59, 59, 0.65);
+    mix-blend-mode: screen;
+    animation: nav-link-glitch-top 0.42s steps(2, end) infinite;
+  }
+
+  .nav-card--side-a .nav-card__link::after {
+    color: #35d7ff;
+    text-shadow: 0 0 5px rgba(53, 215, 255, 0.65);
+    mix-blend-mode: screen;
+    animation: nav-link-glitch-bottom 0.34s steps(2, end) infinite;
+  }
+
+  @keyframes nav-link-glitch {
+    0%,
+    100% {
+      transform: translate(0);
+    }
+    20% {
+      transform: translate(-1px, 1px);
+    }
+    40% {
+      transform: translate(1px, -1px);
+    }
+    60% {
+      transform: translate(0, 1px);
+    }
+    80% {
+      transform: translate(1px, 0);
+    }
+  }
+
+  @keyframes nav-link-glitch-top {
+    0%,
+    100% {
+      clip-path: inset(5% 0 78% 0);
+      transform: translate(-2px, 0);
+    }
+    20% {
+      clip-path: inset(32% 0 52% 0);
+      transform: translate(2px, -1px);
+    }
+    40% {
+      clip-path: inset(12% 0 72% 0);
+      transform: translate(-1px, 1px);
+    }
+    60% {
+      clip-path: inset(58% 0 28% 0);
+      transform: translate(3px, 0);
+    }
+    80% {
+      clip-path: inset(42% 0 44% 0);
+      transform: translate(-3px, 0);
+    }
+  }
+
+  @keyframes nav-link-glitch-bottom {
+    0%,
+    100% {
+      clip-path: inset(72% 0 8% 0);
+      transform: translate(2px, 0);
+    }
+    20% {
+      clip-path: inset(48% 0 36% 0);
+      transform: translate(-2px, 1px);
+    }
+    40% {
+      clip-path: inset(64% 0 18% 0);
+      transform: translate(1px, -1px);
+    }
+    60% {
+      clip-path: inset(22% 0 58% 0);
+      transform: translate(-3px, 0);
+    }
+    80% {
+      clip-path: inset(38% 0 48% 0);
+      transform: translate(3px, 0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nav-card--side-a .nav-card__link::before,
+    .nav-card--side-a .nav-card__link::after {
+      display: none;
+    }
+
+    .nav-card--side-a .nav-card__link:hover,
+    .nav-card--side-a .nav-card__link:focus-visible {
+      animation: none;
+    }
   }
 
   .nav-card__visual {

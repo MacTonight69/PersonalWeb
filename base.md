@@ -1,8 +1,8 @@
 # Base del proyecto — Página personal
 
-**Versión:** 3.6
+**Versión:** 3.8
 
-**Estado:** Sitio dividido en Side A y Side B; Side A con ambientación VHS, escritura progresiva en CM, cerebro 3D en la transición interna, cabeza giratoria en CD, páginas de sección y CP adaptable en escritorio
+**Estado:** Sitio dividido en Side A y Side B, con todo el texto visible en inglés; Side A con ambientación VHS, escritura progresiva en CM, cerebro SVG animado en la transición interna, glitch en los enlaces de CD, cabeza giratoria en CD, páginas de sección con contenido real y CP adaptable en escritorio
 **Tipo de proyecto:** Sitio web personal estático
 
 ---
@@ -52,7 +52,7 @@ Por el momento, **el texto de contenido es el mismo en ambos lados**. La diferen
 - Fuente `EASVHS` (`easvhs.ttf`), gratuita para uso personal y comercial según indicación del propietario.
 - Animación de carga `carga_vhs.svg`.
 - Introducción `Intro_Side_A.gif`.
-- Transición entre secciones: cerebro giratorio en three.js, con `spinning_brain.svg` como reserva si no hay WebGL.
+- Transición entre secciones: SVG animado del cerebro (`spinning_brain.svg`), sin Canvas ni WebGL.
 - Imagen de perfil `PFP_Side_A.gif`.
 - Banner glitch animado `banner_glitch_CA.svg`.
 
@@ -84,14 +84,14 @@ El cambio de lado se realiza mediante el componente `SideSwitcher`, situado en l
 
 Las seis rutas de sección se generan desde `src/pages/[section].astro` y comparten `src/layouts/SectionPageLayout.astro`.
 
-Cada página contiene únicamente:
+Cada página contiene:
 
 - Un botón `BACK` fijo en la esquina superior izquierda, que vuelve a `/`.
 - El card principal CP, con la ambientación VHS de Side A.
 - Un título grande y centrado con el nombre de la sección.
-- El texto `En esta sección se hablará de mi [nombre_sección]`.
+- El contenido completo de la sección, definido en `src/content/sections.ts` y renderizado como párrafos, subtítulos o listas de tecnologías según corresponda.
 
-Los enlaces de CD llevan el atributo `data-section-link`. Al activarlos, `SectionTransition.astro` muestra un cerebro giratorio renderizado en three.js durante 0,88 segundos antes de navegar (con el SVG como imagen de reserva si falla WebGL). La portada completa de SVG y GIF no se repite en esas transiciones internas.
+Los enlaces de CD llevan el atributo `data-section-link`. Al activarlos, `SectionTransition.astro` muestra el SVG animado del cerebro durante 0,88 segundos antes de navegar. La portada completa de SVG y GIF no se repite en esas transiciones internas.
 
 ---
 
@@ -198,13 +198,13 @@ Contiene el bloque de bienvenida, centrado vertical y horizontalmente:
 
 **Título:**
 
-> Layer: 88
+> Layer: 088
 
 **Texto:**
 
-> Es posible que esté usted confundido. Tal vaz casi tanto como yo. Si quiere descrubrir quién soy yo, tal vez esta información le sea de ayuda. Tenga cuidado por donde mira: Dios nos está mirando...
+> You may be confused. Perhaps almost as much as I am. If you wish to discover who I am, perhaps this information will be of help. Be careful: they are watching us.
 
-El título utiliza un elemento `h1`, por lo que constituye el encabezado principal de la página.
+El título utiliza un elemento `h1`, por lo que constituye el encabezado principal de la página. La versión original en español de este texto se conserva como referencia en el historial de trabajo; la frase final equivalía a «Tenga cuidado: ellos nos vigilan.».
 
 ### 5.4. CD — Card derecha (navegación)
 
@@ -214,12 +214,12 @@ Contiene:
 
 - Un título grande con el texto **NAVY**.
 - Una lista vertical de seis enlaces:
-  - Perfil Profesional
-  - Formación
-  - Tecnologías
-  - Proyectos
-  - Organización
-  - Vista a futuro
+  - Professional Profile
+  - Education
+  - Technologies
+  - Projects
+  - Organization
+  - Future Vision
 
 Los elementos son enlaces reales (`<a>`), no simple texto. Actualmente apuntan a las rutas:
 
@@ -232,9 +232,11 @@ Los elementos son enlaces reales (`<a>`), no simple texto. Actualmente apuntan a
 /vista-a-futuro
 ```
 
-Estas rutas ya tienen páginas implementadas mediante `src/pages/[section].astro`. Los destinos se definen en el arreglo `sections` de `src/components/RightCard.astro` y se marcan con `data-section-link` para activar la transición GIF.
+Estas rutas ya tienen páginas implementadas mediante `src/pages/[section].astro`. Los títulos, el orden y el contenido de las secciones se definen en `src/content/sections.ts`; `RightCard.astro` consume `sectionNav` y los enlaces se marcan con `data-section-link` para activar la transición. Los slugs de las rutas se mantienen en español, aunque el texto visible está en inglés.
 
 En Side A, debajo de la lista y separada de ella, CD muestra `public/media/spin_head.svg` ocupando todo el ancho de la tarjeta. Es un SVG animado que se reproduce automáticamente, en bucle y sin controles. En Side B la animación no se muestra, para conservar el diseño claro original.
+
+En Side A, cada enlace de la lista aplica un efecto de distorsión cromática tipo glitch al pasar el cursor o recibir foco, y no utiliza subrayado. En Side B el hover mantiene un cambio de color simple.
 
 ---
 
@@ -260,7 +262,7 @@ La secuencia completa de `carga_vhs.svg` + `Intro_Side_A.gif` se reserva para:
 - La entrada inicial a una página de Side A.
 - El regreso a Side A desde Side B.
 
-Las transiciones internas entre `/`, las secciones y `BACK` usan un **cerebro 3D giratorio en three.js** durante **0,88 segundos**: dos hemisferios con giros procedurales generados por ruido de valor, cisura longitudinal, cerebelo con folias y tronco encefálico, renderizados con superficie oscura oclusiva, anillos de latitud azules y halo radial en la paleta de Side A. El SVG original se conserva como imagen de reserva cuando WebGL no está disponible. Para evitar que la portada completa vuelva a ejecutarse al llegar a la página de destino, la transición guarda una marca temporal en `sessionStorage` que el layout consume antes de renderizar la portada.
+Las transiciones internas entre `/`, las secciones y `BACK` usan el **SVG animado del cerebro** (`spinning_brain.svg`) durante **0,88 segundos**. El SVG incluye su propio texto `Loading ...` y se muestra a pantalla completa con `object-fit: contain`, sin Canvas ni WebGL. Para evitar que la portada completa vuelva a ejecutarse al llegar a la página de destino, la transición guarda una marca temporal en `sessionStorage` que el layout consume antes de renderizar la portada.
 
 En CM, tanto el título **Layer: 88** como el párrafo se escriben carácter por carácter al quedar visible la página. Primero aparece el título y después el párrafo, con un cursor intermitente. Con `prefers-reduced-motion: reduce`, el contenido aparece completo sin animación. El texto completo permanece accesible mediante etiquetas ARIA mientras se reproduce el efecto visual.
 
@@ -496,7 +498,7 @@ Los archivos de `resource/` y `fonts/` son los originales de trabajo. El sitio u
 | `src/components/RightCard.astro` | Título NAVY y enlaces de navegación |
 | `src/components/SideSwitcher.astro` | Botón fijo de cambio entre Side A y Side B |
 | `src/components/SideAIntro.astro` | Secuencia completa de carga e introducción de Side A |
-| `src/components/SectionTransition.astro` | Transición interna de 0,88 s con cerebro 3D en three.js y reserva SVG |
+| `src/components/SectionTransition.astro` | Transición interna de 0,88 s con el SVG animado del cerebro, sin WebGL |
 | `src/components/VhsOverlay.astro` | Capas visuales del filtro VHS |
 | `src/styles/global.css` | Variables, estilos base, distribución de CP y reglas responsive |
 | `src/styles/side-a.css` | Fuente EASVHS, tema oscuro, botón de Side A y omisión de la portada en transiciones |
@@ -566,7 +568,7 @@ El resultado de la compilación se guarda en `dist/`.
 - Imagen de perfil animada en Side A.
 - Filtro VHS exclusivo de Side A con scanlines, ruido, aberración cromática, parpadeo y tracking.
 - Seis páginas de sección con `BACK`, CP, título y texto.
-- Transición interna de 0,88 s con cerebro giratorio en three.js, sin repetir la portada completa.
+- Transición interna de 0,88 s con el SVG animado del cerebro, sin repetir la portada completa.
 - Respeto de `prefers-reduced-motion`.
 - Distribución responsive sin desbordamiento horizontal.
 

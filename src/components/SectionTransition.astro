@@ -1,8 +1,6 @@
 ---
 // Transición interna entre secciones de Side A.
-// Cerebro giratorio renderizado en three.js con los dos hemisferios,
-// cerebelo y tronco encefálico generados de forma procedural.
-// Si WebGL no está disponible, se conserva el SVG original como reserva.
+// Usa el SVG animado original del cerebro; sin Canvas ni WebGL.
 //
 // Los enlaces con `data-section-link` activan la transición y guardan
 // una marca temporal en `sessionStorage`; el layout la consume para
@@ -10,16 +8,12 @@
 ---
 <div class="section-transition" hidden aria-hidden="true">
   <img
-    class="section-transition__brain section-transition__fallback"
+    class="section-transition__brain"
     src="/media/spinning_brain.svg"
     alt=""
     width="640"
     height="480"
   />
-  <canvas class="section-transition__brain section-transition__canvas"></canvas>
-  <p class="section-transition__label">
-    Loading<span class="section-transition__dots"><span>.</span><span>.</span><span>.</span></span>
-  </p>
 </div>
 
 <style>
@@ -44,637 +38,23 @@
     inset: 0;
     width: 100%;
     height: 100%;
-  }
-
-  .section-transition__fallback {
-    max-width: 100vw;
-    max-height: 100dvh;
     object-fit: contain;
     object-position: center;
-  }
-
-  .section-transition__fallback.is-hidden {
-    display: none;
-  }
-
-  .section-transition__label {
-    position: absolute;
-    top: 16%;
-    left: 50%;
-    transform: translateX(-50%);
-    margin: 0;
-    font-family: 'Courier New', monospace;
-    font-weight: 700;
-    font-size: clamp(1.1rem, 4.5vmin, 1.875rem);
-    letter-spacing: 0.14em;
-    color: #26619c;
-  }
-
-  .section-transition__dots span {
-    opacity: 0;
-    animation: section-transition-dot 2s linear infinite;
-  }
-
-  .section-transition__dots span:nth-child(1) {
-    animation-delay: 0.5s;
-  }
-
-  .section-transition__dots span:nth-child(2) {
-    animation-delay: 1s;
-  }
-
-  .section-transition__dots span:nth-child(3) {
-    animation-delay: 1.5s;
-  }
-
-  @keyframes section-transition-dot {
-    0% {
-      opacity: 0;
-    }
-
-    25% {
-      opacity: 1;
-    }
-
-    100% {
-      opacity: 1;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .section-transition__dots span {
-      animation: none;
-      opacity: 1;
-    }
   }
 </style>
 
 <script>
-  import * as THREE from 'three';
-
   const TRANSITION_KEY = 'side-a-brain-transition';
   const TRANSITION_DURATION = 880;
-
-  const overlay = document.querySelector<HTMLElement>('.section-transition');
-  const canvas =
-    overlay?.querySelector<HTMLCanvasElement>('.section-transition__canvas') ?? null;
-  const fallback =
-    overlay?.querySelector<HTMLElement>('.section-transition__fallback') ?? null;
   const prefersReducedMotion = window.matchMedia(
     '(prefers-reduced-motion: reduce)',
   ).matches;
-
-  // ——— Parámetros de la escena ———
-  const SPIN_SPEED = 0.22; // RADIANES POR SEGUNDO
-  const BASE_ROTATION = 0.02;
-  const BASE_TILT = -0.12;
-  const BOUNDING_RADIUS = 1.3;
-
-  const HEMI_ROWS = 48;
-  const HEMI_COLS = 96;
-  const HEMI_MERIDIAN_STRIDE = 8;
-  const CERE_ROWS = 36;
-  const CERE_COLS = 72;
-
-  // ——— Estado ———
-  let ready = false;
-  let failed = false;
-  let playing = false;
-  let lastTime = -1;
-  let elapsed = 0;
-
-  let renderer: THREE.WebGLRenderer | null = null;
-  let scene: THREE.Scene | null = null;
-  let camera: THREE.PerspectiveCamera | null = null;
-  let brain: THREE.Group | null = null;
-
-  /* ============================================================
-   * Ruido de valor 3D determinista para la superficie cortical
-   * ============================================================ */
-
-  function hash3(ix: number, iy: number, iz: number): number {
-    let n = (Math.imul(ix, 15731) + Math.imul(iy, 789221) + Math.imul(iz, 1376312589)) | 0;
-    n = (n << 13) ^ n;
-    n = (Math.imul(n, Math.imul(Math.imul(n, n), 60493) + 19990303) + 1376312589) & 0x7fffffff;
-    return n / 0x7fffffff;
-  }
-
-  function fade(t: number): number {
-    return t * t * t * (t * (t * 6 - 15) + 10);
-  }
-
-  function valueNoise3(x: number, y: number, z: number): number {
-    const xi = Math.floor(x);
-    const yi = Math.floor(y);
-    const zi = Math.floor(z);
-    const u = fade(x - xi);
-    const v = fade(y - yi);
-    const w = fade(z - zi);
-
-    const c000 = hash3(xi, yi, zi);
-    const c100 = hash3(xi + 1, yi, zi);
-    const c010 = hash3(xi, yi + 1, zi);
-    const c110 = hash3(xi + 1, yi + 1, zi);
-    const c001 = hash3(xi, yi, zi + 1);
-    const c101 = hash3(xi + 1, yi, zi + 1);
-    const c011 = hash3(xi, yi + 1, zi + 1);
-    const c111 = hash3(xi + 1, yi + 1, zi + 1);
-
-    const x00 = c000 + (c100 - c000) * u;
-    const x10 = c010 + (c110 - c010) * u;
-    const x01 = c001 + (c101 - c001) * u;
-    const x11 = c011 + (c111 - c011) * u;
-
-    const y0 = x00 + (x10 - x00) * v;
-    const y1 = x01 + (x11 - x01) * v;
-
-    return y0 + (y1 - y0) * w;
-  }
-
-  function fbm3(x: number, y: number, z: number): number {
-    let value = 0;
-    let amplitude = 0.55;
-    let frequency = 1;
-    for (let octave = 0; octave < 3; octave += 1) {
-      value +=
-        amplitude *
-        valueNoise3(
-          x * frequency + octave * 17.7,
-          y * frequency - octave * 9.3,
-          z * frequency + octave * 31.1,
-        );
-      amplitude *= 0.5;
-      frequency *= 2.13;
-    }
-    return value;
-  }
-
-  function gauss(x: number, mu: number, sigma: number): number {
-    const t = (x - mu) / sigma;
-    return Math.exp(-0.5 * t * t);
-  }
-
-  /* ============================================================
-   * Morfología del cerebro
-   * ============================================================ */
-
-  // Surcos y circunvoluciones: bandas de ruido con dominio deformado.
-  function foldField(d: THREE.Vector3): number {
-    const w1 = valueNoise3(d.x * 2.1 + 7.3, d.y * 2.1 - 4.1, d.z * 2.1 + 11.7) - 0.5;
-    const w2 = valueNoise3(d.x * 2.1 - 3.9, d.y * 2.1 + 8.8, d.z * 2.1 - 1.3) - 0.5;
-    // El término en z estira los giros de atrás hacia adelante.
-    const n = fbm3(
-      d.x * 4.6 + w1 * 2.6 + 5.0,
-      d.y * 4.8 + w2 * 2.6 - 6.1,
-      d.z * 5.2 + w1 * 1.4 + 13.0,
-    );
-    let crest = 1 - Math.abs(2 * n - 1);
-    crest *= crest;
-    // Los giros se atenúan en la cara medial (cisura) y en la base.
-    const medial = THREE.MathUtils.smoothstep(d.x, 0.06, 0.55);
-    const basal = 1 - THREE.MathUtils.smoothstep(-d.y, 0.02, 0.85);
-    return 0.085 * crest * (0.3 + 0.7 * medial) * (0.4 + 0.6 * basal);
-  }
-
-  // Hemisferio derecho (d.x >= 0); el izquierdo es su espejo.
-  function hemisphereMap(d: THREE.Vector3, out: THREE.Vector3): void {
-    let x = d.x * 0.6;
-    let y = d.y * 0.58;
-    let z = d.z * 0.95;
-
-    // Base aplanada
-    const down = THREE.MathUtils.smoothstep(-y, 0.02, 0.55);
-    y *= 1 - 0.28 * down;
-
-    // Cúpula redondeada: estrechar los hombros de la parte alta
-    const dome = THREE.MathUtils.smoothstep(y, 0.15, 0.56);
-    x *= 1 - 0.16 * dome * dome;
-
-    // Frente estrechado
-    const front = THREE.MathUtils.smoothstep(z, 0.1, 0.95);
-    x *= 1 - 0.24 * front * front;
-    y *= 1 - 0.1 * front;
-
-    // Posterior levemente estrechado
-    const back = THREE.MathUtils.smoothstep(-z, 0.35, 0.95);
-    x *= 1 - 0.16 * back;
-
-    // Lóbulo temporal
-    const g = gauss(y, -0.14, 0.22) * gauss(z, 0.15, 0.45);
-    const bulge = 0.16 * g;
-    x += bulge;
-    y -= 0.3 * bulge;
-
-    out.set(x, y, z).addScaledVector(d, foldField(d));
-  }
-
-  // Cerebelo: elipsoide con folias horizontales.
-  function cerebellumMap(d: THREE.Vector3, out: THREE.Vector3): void {
-    const w = valueNoise3(d.x * 2.6 + 21.4, d.y * 2.6 + 3.3, d.z * 2.6 - 9.1);
-    const folia = Math.pow(Math.abs(Math.sin(d.y * 22 + w * 3.0)), 0.85);
-    out.set(d.x * 0.5, d.y * 0.28, d.z * 0.4);
-    out.addScaledVector(d, 0.024 * folia);
-  }
-
-  /* ============================================================
-   * Rejilla esférica deformable → superficie, anillos y meridianos
-   * ============================================================ */
-
-  function buildGrid(
-    rows: number,
-    cols: number,
-    thetaFrom: number,
-    thetaTo: number,
-    phiFrom: number,
-    phiTo: number,
-    map: (d: THREE.Vector3, out: THREE.Vector3) => void,
-  ): Float32Array {
-    const points = new Float32Array((rows + 1) * (cols + 1) * 3);
-    const d = new THREE.Vector3();
-    const p = new THREE.Vector3();
-    let k = 0;
-    for (let r = 0; r <= rows; r += 1) {
-      const theta = thetaFrom + ((thetaTo - thetaFrom) * r) / rows;
-      const sinTheta = Math.sin(theta);
-      const cosTheta = Math.cos(theta);
-      for (let c = 0; c <= cols; c += 1) {
-        const phi = phiFrom + ((phiTo - phiFrom) * c) / cols;
-        d.set(sinTheta * Math.cos(phi), cosTheta, sinTheta * Math.sin(phi));
-        map(d, p);
-        points[k++] = p.x;
-        points[k++] = p.y;
-        points[k++] = p.z;
-      }
-    }
-    return points;
-  }
-
-  interface GridGeometries {
-    surface: THREE.BufferGeometry;
-    rings: THREE.BufferGeometry;
-    meridians: THREE.BufferGeometry | null;
-  }
-
-  function createGeometries(
-    points: Float32Array,
-    rows: number,
-    cols: number,
-    meridianStride = 0,
-  ): GridGeometries {
-    const surface = new THREE.BufferGeometry();
-    surface.setAttribute('position', new THREE.BufferAttribute(points, 3));
-
-    const index: number[] = [];
-    for (let r = 0; r < rows; r += 1) {
-      for (let c = 0; c < cols; c += 1) {
-        const a = r * (cols + 1) + c;
-        const b = a + 1;
-        const d0 = a + cols + 1;
-        const e0 = d0 + 1;
-        index.push(a, d0, b, b, d0, e0);
-      }
-    }
-    surface.setIndex(index);
-
-    // Anillos de latitud (se omiten las filas de los polos).
-    const ringPoints: number[] = [];
-    for (let r = 1; r < rows; r += 1) {
-      for (let c = 0; c < cols; c += 1) {
-        const i0 = (r * (cols + 1) + c) * 3;
-        const i1 = (r * (cols + 1) + c + 1) * 3;
-        ringPoints.push(
-          points[i0], points[i0 + 1], points[i0 + 2],
-          points[i1], points[i1 + 1], points[i1 + 2],
-        );
-      }
-    }
-    const rings = new THREE.BufferGeometry();
-    rings.setAttribute('position', new THREE.BufferAttribute(new Float32Array(ringPoints), 3));
-
-    // Meridianos espaciados (opcional).
-    let meridians: THREE.BufferGeometry | null = null;
-    if (meridianStride > 0) {
-      const meridianPoints: number[] = [];
-      for (let c = 0; c <= cols; c += meridianStride) {
-        const clamped = Math.min(c, cols);
-        if (clamped === c) {
-          for (let r = 0; r < rows; r += 1) {
-            const i0 = (r * (cols + 1) + clamped) * 3;
-            const i1 = ((r + 1) * (cols + 1) + clamped) * 3;
-            meridianPoints.push(
-              points[i0], points[i0 + 1], points[i0 + 2],
-              points[i1], points[i1 + 1], points[i1 + 2],
-            );
-          }
-        }
-      }
-      meridians = new THREE.BufferGeometry();
-      meridians.setAttribute(
-        'position',
-        new THREE.BufferAttribute(new Float32Array(meridianPoints), 3),
-      );
-    }
-
-    return { surface, rings, meridians };
-  }
-
-  /* ============================================================
-   * Construcción de la escena
-   * ============================================================ */
-
-  function createHaloTexture(): THREE.CanvasTexture {
-    const size = 256;
-    const cnv = document.createElement('canvas');
-    cnv.width = size;
-    cnv.height = size;
-    const ctx = cnv.getContext('2d');
-    if (!ctx) throw new Error('sin lienzo para el halo');
-    const gradient = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
-    gradient.addColorStop(0, 'rgba(38, 97, 156, 0.30)');
-    gradient.addColorStop(0.55, 'rgba(38, 97, 156, 0.10)');
-    gradient.addColorStop(1, 'rgba(38, 97, 156, 0)');
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, size, size);
-    const texture = new THREE.CanvasTexture(cnv);
-    texture.colorSpace = THREE.SRGBColorSpace;
-    return texture;
-  }
-
-  function buildHemisphere(
-    surfaceMaterial: THREE.Material,
-    ringMaterial: THREE.Material,
-    meridianMaterial: THREE.Material,
-  ): THREE.Group {
-    const points = buildGrid(HEMI_ROWS, HEMI_COLS, 0, Math.PI, 0, Math.PI, hemisphereMap);
-    const { surface, rings, meridians } = createGeometries(
-      points,
-      HEMI_ROWS,
-      HEMI_COLS,
-      HEMI_MERIDIAN_STRIDE,
-    );
-    surface.computeVertexNormals();
-
-    const mesh = new THREE.Mesh(surface, surfaceMaterial);
-    mesh.renderOrder = 0;
-    const ringLines = new THREE.LineSegments(rings, ringMaterial);
-    ringLines.renderOrder = 1;
-    const group = new THREE.Group();
-    group.add(mesh, ringLines);
-    if (meridians) {
-      const meridianLines = new THREE.LineSegments(meridians, meridianMaterial);
-      meridianLines.renderOrder = 2;
-      group.add(meridianLines);
-    }
-    return group;
-  }
-
-  function buildCerebellum(
-    surfaceMaterial: THREE.Material,
-    ringMaterial: THREE.Material,
-  ): THREE.Group {
-    const points = buildGrid(CERE_ROWS, CERE_COLS, 0, Math.PI, 0, Math.PI * 2, cerebellumMap);
-    const { surface, rings } = createGeometries(points, CERE_ROWS, CERE_COLS);
-    surface.computeVertexNormals();
-
-    const mesh = new THREE.Mesh(surface, surfaceMaterial);
-    mesh.renderOrder = 0;
-    const ringLines = new THREE.LineSegments(rings, ringMaterial);
-    ringLines.renderOrder = 1;
-
-    const group = new THREE.Group();
-    group.add(mesh, ringLines);
-    group.position.set(0, -0.38, -0.68);
-    return group;
-  }
-
-  // Placa oscura que rellena la cisura longitudinal entre los hemisferios.
-  function buildFissure(): THREE.Mesh {
-    const geometry = new THREE.SphereGeometry(1, 24, 16);
-    const mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({ color: 0x000000 }));
-    mesh.scale.set(0.034, 0.46, 0.86);
-    mesh.position.set(0, 0.15, 0);
-    mesh.renderOrder = 0;
-    return mesh;
-  }
-
-  function buildStem(surfaceMaterial: THREE.Material): THREE.Mesh {
-    const geometry = new THREE.CapsuleGeometry(0.115, 0.42, 4, 14);
-    const mesh = new THREE.Mesh(geometry, surfaceMaterial);
-    mesh.position.set(0, -0.5, -0.55);
-    mesh.rotation.x = 0.2;
-    return mesh;
-  }
-
-  function hasWebGL(): boolean {
-    try {
-      const probe = document.createElement('canvas');
-      return Boolean(probe.getContext('webgl2') || probe.getContext('webgl'));
-    } catch {
-      return false;
-    }
-  }
-
-  function markFailed(): void {
-    failed = true;
-    canvas?.style.setProperty('display', 'none');
-  }
-
-  function buildScene(): void {
-    if (!canvas) throw new Error('sin lienzo');
-
-    renderer = new THREE.WebGLRenderer({
-      canvas,
-      antialias: true,
-      alpha: true,
-      powerPreference: 'high-performance',
-    });
-    renderer.setClearColor(0x000000, 0);
-
-    scene = new THREE.Scene();
-    scene.fog = new THREE.Fog(0x000308, 6, 10.5);
-
-    camera = new THREE.PerspectiveCamera(40, 1, 0.1, 40);
-
-    scene.add(new THREE.AmbientLight(0x22405f, 0.9));
-    const key = new THREE.DirectionalLight(0x8ab8e8, 1.4);
-    key.position.set(2.2, 2.8, 3.5);
-    scene.add(key);
-    const fill = new THREE.DirectionalLight(0x1c3a5c, 0.7);
-    fill.position.set(-2.5, -1.5, -3);
-    scene.add(fill);
-
-    const haloMaterial = new THREE.SpriteMaterial({
-      map: createHaloTexture(),
-      transparent: true,
-      blending: THREE.AdditiveBlending,
-      depthWrite: false,
-      depthTest: false,
-    });
-    const halo = new THREE.Sprite(haloMaterial);
-    halo.scale.set(7.5, 5.6, 1);
-    halo.position.set(0, -0.1, -2.6);
-    halo.renderOrder = -1;
-    scene.add(halo);
-
-    const surfaceMaterial = new THREE.MeshPhongMaterial({
-      color: 0x05090f,
-      specular: 0x1a3a5c,
-      shininess: 10,
-      side: THREE.DoubleSide,
-    });
-    const ringMaterial = new THREE.LineBasicMaterial({
-      color: 0x7fb2ec,
-      transparent: true,
-      opacity: 0.85,
-      blending: THREE.AdditiveBlending,
-      depthWrite: false,
-    });
-    const meridianMaterial = new THREE.LineBasicMaterial({
-      color: 0x2c619e,
-      transparent: true,
-      opacity: 0.45,
-      blending: THREE.AdditiveBlending,
-      depthWrite: false,
-    });
-    // Materiales apagados para el cerebelo y el tronco: se leen subordinados.
-    const dimSurfaceMaterial = new THREE.MeshPhongMaterial({
-      color: 0x04070b,
-      specular: 0x0a1520,
-      shininess: 6,
-      side: THREE.DoubleSide,
-    });
-    const dimRingMaterial = new THREE.LineBasicMaterial({
-      color: 0x527ea6,
-      transparent: true,
-      opacity: 0.55,
-      blending: THREE.AdditiveBlending,
-      depthWrite: false,
-    });
-
-    brain = new THREE.Group();
-    const right = buildHemisphere(surfaceMaterial, ringMaterial, meridianMaterial);
-    right.position.x = 0.035;
-    const left = right.clone();
-    left.position.x = -0.035;
-    left.scale.x = -1;
-    brain.add(
-      right,
-      left,
-      buildFissure(),
-      buildCerebellum(dimSurfaceMaterial, dimRingMaterial),
-      buildStem(dimSurfaceMaterial),
-    );
-    brain.position.y = 0.08;
-    brain.rotation.x = BASE_TILT;
-    brain.rotation.y = BASE_ROTATION;
-    scene.add(brain);
-
-    resize();
-
-    window.addEventListener('resize', onResize);
-
-    // Fotograma estático inicial (también sirve con movimiento reducido).
-    renderFrame();
-  }
-
-  /* ============================================================
-   * Ciclo de vida de la escena
-   * ============================================================ */
-
-  function fitCamera(): void {
-    if (!camera) return;
-    const width = window.innerWidth;
-    const height = window.innerHeight;
-    const aspect = width / Math.max(height, 1);
-    camera.aspect = aspect;
-    const tanV = Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2);
-    const distV = BOUNDING_RADIUS / tanV;
-    const distH = BOUNDING_RADIUS / (tanV * Math.max(aspect, 0.05));
-    const dist = Math.max(distV, distH) * 1.18;
-    camera.position.set(0, dist * 0.2, dist);
-    camera.lookAt(0, -0.05, 0);
-    camera.updateProjectionMatrix();
-  }
-
-  function resize(): void {
-    if (!renderer || !camera) return;
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-    renderer.setSize(window.innerWidth, window.innerHeight, false);
-    fitCamera();
-  }
-
-  function onResize(): void {
-    if (!ready) return;
-    resize();
-    if (!playing) renderFrame();
-  }
-
-  function renderFrame(): void {
-    if (renderer && scene && camera) {
-      renderer.render(scene, camera);
-    }
-  }
-
-  function animate(time: number): void {
-    if (lastTime < 0) lastTime = time;
-    elapsed += Math.min((time - lastTime) / 1000, 0.1);
-    lastTime = time;
-    if (brain) {
-      brain.rotation.y = BASE_ROTATION + elapsed * SPIN_SPEED;
-      // Balanceo sutil que evita la lectura estática.
-      brain.rotation.x = BASE_TILT + 0.05 * Math.sin(elapsed * 2.4);
-    }
-    renderFrame();
-  }
-
-  function start(): void {
-    ensureBuilt();
-    if (!overlay) return;
-    overlay.hidden = false;
-    if (!ready || prefersReducedMotion) return;
-    lastTime = -1;
-    playing = true;
-    renderer?.setAnimationLoop(animate);
-  }
-
-  function ensureBuilt(): void {
-    if (ready || failed) return;
-
-    if (!hasWebGL()) {
-      markFailed();
-      return;
-    }
-
-    try {
-      buildScene();
-      ready = true;
-      fallback?.classList.add('is-hidden');
-    } catch {
-      markFailed();
-    }
-  }
-
-  // Construcción anticipada: al pulsar el primer enlace, la escena ya está lista.
-  const startIdleBuild = () => ensureBuilt();
-  if (typeof window.requestIdleCallback === 'function') {
-    window.requestIdleCallback(startIdleBuild, { timeout: 600 });
-  } else {
-    window.setTimeout(startIdleBuild, 400);
-  }
-
-  window.addEventListener('pagehide', () => {
-    if (playing) {
-      playing = false;
-      renderer?.setAnimationLoop(null);
-    }
-  });
-
-  /* ============================================================
-   * Transición de navegación (880 ms)
-   * ============================================================ */
+  const overlay = document.querySelector<HTMLElement>('.section-transition');
+  let isTransitioning = false;
 
   document.addEventListener('click', (event) => {
     if (
+      isTransitioning ||
       event.defaultPrevented ||
       event.button !== 0 ||
       event.metaKey ||
@@ -688,7 +68,9 @@
 
     if (!(event.target instanceof Element)) return;
 
-    const link = event.target.closest<HTMLAnchorElement>('a[data-section-link]');
+    const link = event.target.closest<HTMLAnchorElement>(
+      'a[data-section-link]',
+    );
 
     if (!link || link.target === '_blank' || link.hasAttribute('download')) {
       return;
@@ -698,6 +80,7 @@
     if (!href) return;
 
     event.preventDefault();
+    isTransitioning = true;
 
     try {
       sessionStorage.setItem(TRANSITION_KEY, Date.now().toString());
@@ -705,7 +88,9 @@
       // Si sessionStorage falla, la navegación sigue funcionando.
     }
 
-    start();
+    if (overlay) {
+      overlay.hidden = false;
+    }
 
     window.setTimeout(() => {
       window.location.assign(href);

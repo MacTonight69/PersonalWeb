@@ -1,28 +1,51 @@
 ---
 import SideALayout from './SideALayout.astro';
 import '../styles/section.css';
+import type { SectionBlock } from '../content/sections';
 
 interface Props {
   title: string;
-  sectionName: string;
+  blocks: SectionBlock[];
 }
 
-const { title, sectionName } = Astro.props;
+const { title, blocks } = Astro.props;
 ---
 
 <SideALayout
   title={`${title} — Side A`}
-  description={`Sección ${title} de la página personal`}
+  description={`${title} section of the personal website`}
   showSwitcher={false}
 >
   <a class="section-back" href="/" data-section-link>BACK</a>
 
-  <main class="main-card section-card">
-    <div class="section-card__content">
-      <h1 class="section-card__title">{title}</h1>
-      <p class="section-card__text">
-        En esta sección se hablará de mi {sectionName}
-      </p>
-    </div>
+  <main class="main-card section-card" aria-labelledby="section-title">
+    <article class="section-card__content">
+      <h1 class="section-card__title" id="section-title">{title}</h1>
+
+      <div class="section-card__body">
+        {
+          blocks.map((block) => {
+            if (block.type === "paragraph") {
+              return <p class="section-card__text">{block.text}</p>;
+            }
+
+            if (block.type === "heading") {
+              return <h2 class="section-card__heading">{block.text}</h2>;
+            }
+
+            return (
+              <dl class="section-card__terms">
+                {block.items.map((item) => (
+                  <div class="section-card__term">
+                    <dt>{item.term}</dt>
+                    <dd>{item.description}</dd>
+                  </div>
+                ))}
+              </dl>
+            );
+          })
+        }
+      </div>
+    </article>
   </main>
 </SideALayout>

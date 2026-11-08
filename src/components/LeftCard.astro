@@ -9,22 +9,22 @@ interface Props {
 
 const {
   profileSrc = '/images/profile-placeholder.svg',
-  profileAlt = 'Imagen de perfil',
+  profileAlt = 'Profile picture',
   profileWidth = 120,
   profileHeight = 120,
   profileFullWidth = false,
 } = Astro.props;
 
 const fields = [
-  { label: 'Usuario', value: 'Mr. Anatema' },
-  { label: 'Nombre', value: 'Bautista Alejandro Cafferata' },
-  { label: 'Fecha de nacimiento', value: '15 ene. 2008' },
-  { label: 'País', value: 'Argentina' },
-  { label: 'Idiomas', value: 'ES nat. & ENG bas.' },
+  { label: 'User', value: 'Mr. Anatema' },
+  { label: 'Name', value: 'Bautista Alejandro Cafferata' },
+  { label: 'Date of birth', value: 'Jan 15, 2008' },
+  { label: 'Country', value: 'Argentina' },
+  { label: 'Languages', value: 'Native Spanish & basic English' },
 ] as const;
 ---
 
-<section class="card card--left" aria-label="Información personal">
+<section class="card card--left" aria-label="Personal information">
   <img
     class:list={[
       'left-card__image',

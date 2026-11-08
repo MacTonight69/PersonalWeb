@@ -1,28 +1,16 @@
 ---
 import SectionPageLayout from '../layouts/SectionPageLayout.astro';
-
-interface SectionProps {
-  title: string;
-  sectionName: string;
-}
+import { sectionContent, sectionOrder } from '../content/sections';
 
 export function getStaticPaths() {
-  const sections = [
-    { slug: 'perfil-profesional', title: 'Perfil Profesional' },
-    { slug: 'formacion', title: 'Formación' },
-    { slug: 'tecnologias', title: 'Tecnologías' },
-    { slug: 'proyectos', title: 'Proyectos' },
-    { slug: 'organizacion', title: 'Organización' },
-    { slug: 'vista-a-futuro', title: 'Vista a futuro' },
-  ] as const;
-
-  return sections.map(({ slug, title }) => ({
+  return sectionOrder.map((slug) => ({
     params: { section: slug },
-    props: { title, sectionName: title },
+    props: { slug },
   }));
 }
 
-const { title, sectionName } = Astro.props as SectionProps;
+const { slug } = Astro.props as { slug: keyof typeof sectionContent };
+const content = sectionContent[slug];
 ---
 
-<SectionPageLayout title={title} sectionName={sectionName} />
+<SectionPageLayout title={content.title} blocks={content.blocks} />

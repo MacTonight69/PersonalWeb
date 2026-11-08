@@ -1,0 +1,2 @@
+# Vision a futuro
+En el futuro tengo pensado seguir formandome como desarrollador; aprender automatizaciones, CI/CD, kubernetes y monitoreo para ser DevOps; profundizar en redes y el sistema Linux para ser encargado de infraestructura; y muchas otras cosas más, con la finalidad de crecer en todas esas áreas como aficionado a la informática y a las computadoras. Espero en el futuro se me dé bien todo eso o, a lo menos, aquello que pueda procesar mi cabeza sin explotar.
