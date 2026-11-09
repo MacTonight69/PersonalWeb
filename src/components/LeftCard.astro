@@ -4,7 +4,6 @@ interface Props {
   profileAlt?: string;
   profileWidth?: number;
   profileHeight?: number;
-  profileFullWidth?: boolean;
 }
 
 const {
@@ -12,7 +11,6 @@ const {
   profileAlt = 'Profile picture',
   profileWidth = 120,
   profileHeight = 120,
-  profileFullWidth = false,
 } = Astro.props;
 
 const fields = [
@@ -26,10 +24,7 @@ const fields = [
 
 <section class="card card--left" aria-label="Personal information">
   <img
-    class:list={[
-      'left-card__image',
-      { 'left-card__image--full': profileFullWidth },
-    ]}
+    class="left-card__image left-card__image--full"
     src={profileSrc}
     alt={profileAlt}
     width={profileWidth}

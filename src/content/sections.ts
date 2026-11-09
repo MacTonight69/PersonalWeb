@@ -3,7 +3,7 @@ export type SectionBlock =
   | { type: "heading"; text: string }
   | { type: "terms"; items: { term: string; description: string }[] };
 
-export interface SectionContent {
+interface SectionContent {
   title: string;
   blocks: SectionBlock[];
 }
@@ -184,7 +184,7 @@ export const sectionContent = {
   ...sections,
 } satisfies Record<string, SectionContent>;
 
-export type SectionSlug = keyof typeof sectionContent;
+type SectionSlug = keyof typeof sectionContent;
 
 export const sectionOrder = [
   "perfil-profesional",

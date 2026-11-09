@@ -1,30 +1,54 @@
 ---
 import '../styles/global.css';
+import '../styles/side-b.css';
 import SideSwitcher from '../components/SideSwitcher.astro';
+import SideBSectionTransition from '../components/SideBSectionTransition.astro';
 
 interface Props {
   title?: string;
   description?: string;
+  showSwitcher?: boolean;
 }
 
 const {
   title = 'Personal Website',
   description = 'Personal Website',
+  showSwitcher = true,
 } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" class="side-b-root">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#ffffff" />
+    <meta name="theme-color" content="#140208" />
     <meta name="generator" content={Astro.generator} />
+    <script is:inline>
+      (() => {
+        try {
+          const key = 'side-b-section-transition';
+          const raw = sessionStorage.getItem(key);
+          if (!raw) return;
+
+          sessionStorage.removeItem(key);
+          const elapsed = Date.now() - Number(raw);
+
+          if (Number.isFinite(elapsed) && elapsed >= 0 && elapsed < 10000) {
+            document.documentElement.classList.add('side-b-skip-intro');
+          }
+        } catch {
+          // Si sessionStorage no está disponible, se mantiene la entrada completa.
+        }
+      })();
+    </script>
+    <link rel="preload" href="/media/background_Side_B.jpg" as="image" />
     <title>{title}</title>
   </head>
   <body class="side-b">
-    <SideSwitcher side="b" />
+    <SideBSectionTransition />
+    {showSwitcher && <SideSwitcher side="b" />}
     <slot />
   </body>
 </html>

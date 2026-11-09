@@ -1,0 +1,115 @@
+<div class="side-b-intro" aria-hidden="true">
+  <img
+    class="side-b-intro__stars"
+    src="/media/stars_storm.svg"
+    alt=""
+    width="1280"
+    height="720"
+  />
+  <img
+    class="side-b-intro__evangelion"
+    data-src="/media/Evangelion.gif"
+    alt=""
+    width="400"
+    height="300"
+  />
+</div>
+
+<style>
+  .side-b-intro {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    background-color: #000;
+    pointer-events: none;
+    animation: side-b-intro-dismiss 0.01s linear 5s forwards;
+  }
+
+  .side-b-intro[hidden] {
+    display: none;
+  }
+
+  .side-b-intro img {
+    grid-area: 1 / 1;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+  }
+
+  .side-b-intro__stars {
+    animation: side-b-stars-hide 0.01s linear 4s forwards;
+  }
+
+  .side-b-intro__evangelion {
+    opacity: 0;
+    visibility: hidden;
+    animation: side-b-evangelion-show 0.01s linear 4s forwards;
+  }
+
+  @keyframes side-b-stars-hide {
+    to {
+      visibility: hidden;
+      opacity: 0;
+    }
+  }
+
+  @keyframes side-b-evangelion-show {
+    to {
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+
+  @keyframes side-b-intro-dismiss {
+    to {
+      visibility: hidden;
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .side-b-intro {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  const intro = document.querySelector<HTMLElement>('.side-b-intro');
+  const evangelion = document.querySelector<HTMLImageElement>(
+    '.side-b-intro__evangelion',
+  );
+  const prefersReducedMotion = window.matchMedia(
+    '(prefers-reduced-motion: reduce)',
+  ).matches;
+
+  if (
+    intro &&
+    (prefersReducedMotion ||
+      document.documentElement.classList.contains('side-b-skip-intro'))
+  ) {
+    intro.hidden = true;
+  } else if (intro) {
+    const src = evangelion?.dataset.src;
+    if (evangelion && src) {
+      window.setTimeout(() => {
+        evangelion.src = src;
+      }, 4000);
+    }
+
+    intro.addEventListener('animationend', (event) => {
+      if (event.animationName === 'side-b-intro-dismiss') {
+        intro.hidden = true;
+      }
+    });
+
+    // Respaldo por si el navegador no emite animationend con la pestaña oculta.
+    window.setTimeout(() => {
+      intro.hidden = true;
+    }, 5200);
+  }
+</script>

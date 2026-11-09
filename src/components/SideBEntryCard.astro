@@ -1,0 +1,130 @@
+---
+interface Props {
+  title: string;
+  subtitle?: string;
+  note?: string;
+  image: string;
+  alt: string;
+  width: number;
+  height: number;
+  layout?: 'poster' | 'cover' | 'album';
+}
+
+const {
+  title,
+  subtitle,
+  note,
+  image,
+  alt,
+  width,
+  height,
+  layout = 'poster',
+} = Astro.props;
+---
+
+<li class:list={['entry-card', `entry-card--${layout}`]}>
+  <figure class="entry-card__media">
+    <img
+      src={image}
+      alt={alt}
+      width={width}
+      height={height}
+      loading="lazy"
+      decoding="async"
+    />
+  </figure>
+
+  <div class="entry-card__body">
+    <h3 class="entry-card__title">{title}</h3>
+    {subtitle && <p class="entry-card__subtitle">{subtitle}</p>}
+    {note && <p class="entry-card__note">{note}</p>}
+  </div>
+</li>
+
+<style>
+  .entry-card {
+    display: grid;
+    gap: 0.85rem;
+    align-items: start;
+    min-width: 0;
+    padding: 0.75rem;
+    background-color: rgba(20, 2, 8, 0.34);
+    border: 1px solid rgba(255, 125, 150, 0.22);
+    border-radius: 0.85rem;
+  }
+
+  .entry-card__media {
+    margin: 0;
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, 0.24);
+    border: 1px solid rgba(255, 125, 150, 0.16);
+    border-radius: 0.55rem;
+  }
+
+  .entry-card__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .entry-card__body {
+    min-width: 0;
+  }
+
+  .entry-card__title {
+    margin: 0;
+    font-size: clamp(1rem, 1.25vw, 1.12rem);
+    line-height: 1.25;
+    color: #ffffff;
+    text-wrap: balance;
+  }
+
+  .entry-card__subtitle {
+    margin: 0.2rem 0 0;
+    font-size: 0.78rem;
+    line-height: 1.35;
+    letter-spacing: 0.04em;
+    color: var(--color-title);
+  }
+
+  .entry-card__note {
+    margin: 0.45rem 0 0;
+    font-size: 0.88rem;
+    line-height: 1.6;
+    color: rgba(255, 233, 238, 0.82);
+    text-wrap: pretty;
+  }
+
+  .entry-card--poster {
+    grid-template-columns: minmax(5.5rem, 7.5rem) minmax(0, 1fr);
+    align-items: center;
+  }
+
+  .entry-card--poster .entry-card__media {
+    aspect-ratio: 3 / 4;
+  }
+
+  .entry-card--cover {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .entry-card--cover .entry-card__media {
+    aspect-ratio: 2 / 3;
+    display: grid;
+    place-items: center;
+    padding: 0.35rem;
+  }
+
+  .entry-card--cover .entry-card__media img {
+    object-fit: contain;
+  }
+
+  .entry-card--album {
+    grid-template-columns: 5.5rem minmax(0, 1fr);
+    align-items: center;
+  }
+
+  .entry-card--album .entry-card__media {
+    aspect-ratio: 1 / 1;
+  }
+</style>

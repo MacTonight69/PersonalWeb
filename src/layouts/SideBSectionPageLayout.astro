@@ -1,0 +1,139 @@
+---
+import SideBLayout from './SideBLayout.astro';
+import type { SideBSection } from '../content/sideBSections';
+
+interface Props {
+  section: SideBSection;
+  variant?: 'empty' | 'article';
+}
+
+const { section, variant = 'empty' } = Astro.props;
+---
+
+<SideBLayout
+  title={`${section.title} — Side B`}
+  description={`${section.title} section of Side B`}
+  showSwitcher={false}
+>
+  <a class="side-b-section-back" href="/side-b" data-side-b-section-link>
+    BACK
+  </a>
+
+  <main
+    class:list={[
+      'main-card',
+      'side-b-section-card',
+      `side-b-section-card--${variant}`,
+    ]}
+    aria-labelledby="side-b-section-title"
+  >
+    <div
+      class:list={[
+        'side-b-section-card__content',
+        `side-b-section-card__content--${variant}`,
+      ]}
+    >
+      <h1 class="side-b-section-card__title" id="side-b-section-title">
+        {section.title}
+      </h1>
+
+      <slot />
+    </div>
+  </main>
+</SideBLayout>
+
+<style>
+  .main-card.side-b-section-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: auto;
+    min-height: calc(
+      100dvh - var(--main-card-margin-block-start) -
+        var(--main-card-margin-block-end)
+    );
+  }
+
+  .side-b-section-card__content {
+    width: 100%;
+    max-width: 40rem;
+    padding-block: clamp(2rem, 6vh, 4rem);
+    text-align: center;
+  }
+
+  .side-b-section-card__title {
+    margin: 0;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    line-height: 1.05;
+    letter-spacing: 0.02em;
+    text-wrap: balance;
+    color: var(--color-title);
+    text-shadow: 0 0 28px rgba(255, 90, 120, 0.35);
+  }
+
+  .side-b-section-card--article {
+    align-items: flex-start;
+  }
+
+  .side-b-section-card--article .side-b-section-card__content {
+    max-width: 68rem;
+    padding-block: clamp(2rem, 5vh, 3.5rem);
+    text-align: left;
+  }
+
+  .side-b-section-card--article .side-b-section-card__title {
+    max-width: 48rem;
+    margin-inline: auto;
+    margin-bottom: clamp(1.5rem, 4vh, 2.5rem);
+    font-size: clamp(3rem, 7vw, 5.5rem);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+  }
+
+  .side-b-section-card--article .side-b-section-card__title::after {
+    content: "";
+    display: block;
+    width: 4.5rem;
+    height: 2px;
+    margin-top: 1.1rem;
+    background: linear-gradient(90deg, var(--color-title), transparent);
+  }
+
+  .side-b-section-back {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 300;
+    font: inherit;
+    font-size: 0.8125rem;
+    line-height: 1;
+    padding: 0.4rem 0.75rem;
+    color: rgba(255, 226, 234, 0.78);
+    background-color: rgba(28, 2, 9, 0.58);
+    border: 1px solid rgba(255, 125, 150, 0.42);
+    border-radius: 0.5rem;
+    text-decoration: none;
+    backdrop-filter: blur(4px);
+  }
+
+  .side-b-section-back:hover {
+    color: #ffffff;
+    background-color: rgba(58, 4, 18, 0.82);
+    border-color: rgba(255, 150, 170, 0.65);
+  }
+
+  .side-b-section-back:focus-visible {
+    outline: 2px solid var(--color-text);
+    outline-offset: 2px;
+  }
+
+  @media (min-width: 54.0625rem) {
+    .main-card.side-b-section-card {
+      height: auto;
+      min-height: calc(
+        100dvh - var(--main-card-margin-block-start) -
+          var(--main-card-margin-block-end)
+      );
+    }
+  }
+</style>

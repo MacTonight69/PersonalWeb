@@ -1,0 +1,120 @@
+---
+import { sideBSections } from '../content/sideBSections';
+---
+
+<nav
+  class="card card--right nav-card nav-card--side-b"
+  aria-label="Main navigation"
+>
+  <h2 class="nav-card__title">YES</h2>
+
+  <ul class="nav-card__list">
+    {
+      sideBSections.map(({ slug, title, icon }) => (
+        <li class="nav-card__item">
+          <a
+            class="nav-card__link"
+            href={`/side-b/${slug}`}
+            data-side-b-section-link
+          >
+            <img
+              class="nav-card__icon"
+              src={icon}
+              alt=""
+              width="64"
+              height="64"
+              loading="eager"
+              decoding="async"
+            />
+            <span>{title}</span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+
+  <img
+    class="nav-card__image"
+    src="/media/i_dont_know_carmesi.svg"
+    alt=""
+    width="960"
+    height="960"
+    loading="lazy"
+    decoding="async"
+  />
+</nav>
+
+<style>
+  .nav-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .nav-card__title {
+    margin: 0;
+    font-size: clamp(2rem, 3vw, 3rem);
+    line-height: 1;
+    letter-spacing: 0.08em;
+    color: var(--color-title);
+    text-shadow: 0 0 18px rgba(255, 90, 120, 0.35);
+  }
+
+  .nav-card__list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .nav-card__link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: clamp(0.95rem, 1.25vw, 1.1rem);
+    line-height: 1.2;
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  .nav-card__link:hover,
+  .nav-card__link:focus-visible {
+    color: var(--color-title);
+  }
+
+  .nav-card__link:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+    border-radius: 0.25rem;
+  }
+
+  .nav-card__icon {
+    flex: 0 0 auto;
+    width: clamp(1.6rem, 2.2vw, 2.1rem);
+    height: clamp(1.6rem, 2.2vw, 2.1rem);
+    object-fit: contain;
+    filter: drop-shadow(0 0 6px rgba(255, 220, 230, 0.45));
+    transition: filter 0.18s ease;
+  }
+
+  .nav-card__link:hover .nav-card__icon,
+  .nav-card__link:focus-visible .nav-card__icon {
+    filter: drop-shadow(0 0 10px rgba(255, 220, 230, 0.8));
+  }
+
+  .nav-card__image {
+    width: clamp(9rem, 26vh, 17rem);
+    max-width: 100%;
+    height: auto;
+    margin: auto auto 0;
+    filter: drop-shadow(0 0 18px rgba(255, 90, 120, 0.35));
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nav-card__icon {
+      transition: none;
+    }
+  }
+</style>

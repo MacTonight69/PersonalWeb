@@ -1,0 +1,600 @@
+---
+const gallery = [
+  {
+    src: '/media/games/the-legend-of-zelda.webp',
+    name: 'The Legend of Zelda',
+    width: 266,
+    height: 379,
+    alt: 'Cover art for The Legend of Zelda',
+  },
+  {
+    src: '/media/games/mega-man.webp',
+    name: 'Mega Man',
+    width: 379,
+    height: 265,
+    alt: 'Cover art for the original Mega Man',
+  },
+  {
+    src: '/media/games/super-smash-flash-2.webp',
+    name: 'Super Smash Flash 2',
+    width: 300,
+    height: 231,
+    alt: 'Super Smash Flash logo',
+  },
+  {
+    src: '/media/games/dragon-ball-devolution.webp',
+    name: 'Dragon Ball Devolution',
+    width: 264,
+    height: 352,
+    alt: 'Cover art for Dragon Ball Devolution',
+  },
+  {
+    src: '/media/games/pokemon-yellow.webp',
+    name: 'Pokémon Yellow',
+    width: 546,
+    height: 182,
+    alt: 'Cover art for Pokémon Red, Blue and Yellow',
+  },
+  {
+    src: '/media/games/grand-theft-auto-san-andreas.webp',
+    name: 'Grand Theft Auto',
+    width: 284,
+    height: 351,
+    alt: 'Cover art for Grand Theft Auto: San Andreas',
+  },
+  {
+    src: '/media/games/age-of-empires.webp',
+    name: 'Age of Empires',
+    width: 256,
+    height: 310,
+    alt: 'Cover art for Age of Empires',
+  },
+  {
+    src: '/media/games/counter-strike.webp',
+    name: 'Counter-Strike 1.6',
+    width: 288,
+    height: 346,
+    alt: 'Cover art for Counter-Strike',
+  },
+  {
+    src: '/media/games/pes-2014.webp',
+    name: 'PES 2014',
+    width: 308,
+    height: 323,
+    alt: 'Cover art for Pro Evolution Soccer 2014',
+  },
+  {
+    src: '/media/games/resident-evil.webp',
+    name: 'Resident Evil',
+    width: 257,
+    height: 388,
+    alt: 'Cover art for the original Resident Evil',
+  },
+  {
+    src: '/media/games/silent-hill.webp',
+    name: 'Silent Hill',
+    width: 316,
+    height: 316,
+    alt: 'Cover art for the original Silent Hill',
+  },
+  {
+    src: '/media/games/yume-nikki.webp',
+    name: 'Yume Nikki',
+    width: 258,
+    height: 387,
+    alt: 'Header art for Yume Nikki',
+  },
+  {
+    src: '/media/games/lisa-the-painful.webp',
+    name: 'LISA: The Painful',
+    width: 447,
+    height: 223,
+    alt: 'Cover art for LISA: The Painful',
+  },
+  {
+    src: '/media/games/street-fighter-ii.webp',
+    name: 'Street Fighter II',
+    width: 257,
+    height: 388,
+    alt: 'Promotional art for Street Fighter II',
+  },
+  {
+    src: '/media/games/naruto-ultimate-ninja-storm.webp',
+    name: 'Naruto: Ultimate Ninja Storm',
+    width: 256,
+    height: 295,
+    alt: 'Cover art for Naruto: Ultimate Ninja Storm',
+  },
+  {
+    src: '/media/games/soulcalibur.webp',
+    name: 'Soulcalibur',
+    width: 267,
+    height: 372,
+    alt: 'Promotional art for Soulcalibur',
+  },
+  {
+    src: '/media/games/earthbound.webp',
+    name: 'EarthBound',
+    width: 369,
+    height: 270,
+    alt: 'Box art for EarthBound',
+  },
+  {
+    src: '/media/games/mother-3.webp',
+    name: 'Mother 3',
+    width: 396,
+    height: 252,
+    alt: 'Packaging art for Mother 3',
+  },
+  {
+    src: '/media/games/touhou-6.webp',
+    name: 'Touhou 6',
+    width: 300,
+    height: 296,
+    alt: 'Cover art for Touhou 6: the Embodiment of Scarlet Devil',
+  },
+  {
+    src: '/media/games/crazy-zombie.webp',
+    name: 'Crazy Zombie',
+    width: 400,
+    height: 400,
+    alt: 'Screenshot from Crazy Zombie',
+  },
+] as const;
+---
+
+<div class="games">
+  <header class="games__intro">
+    <p class="games__kicker">A lifelong pastime</p>
+    <p class="games__lede">
+      Video games have been part of my life for as long as I can remember. It
+      is, in fact, the pastime I have enjoyed the most and the one I discovered
+      earliest.
+    </p>
+    <p class="games__meta">Childhood · Adolescence · Today</p>
+  </header>
+
+  <div class="games__prose">
+    <p>
+      During my childhood I spent my days playing on a PlayStation 2, where I
+      discovered many games that were not exactly appropriate for my age.
+    </p>
+
+    <figure class="games__figure games__figure--console">
+      <img
+        src="/media/games/playstation-2.webp"
+        alt="Sony PlayStation 2 console"
+        width="1100"
+        height="682"
+        loading="eager"
+        decoding="async"
+      />
+      <figcaption>The PlayStation 2 — the console where it all began.</figcaption>
+    </figure>
+
+    <p>
+      I also learned to use emulators and, for a while, became a fan of The
+      Legend of Zelda and Mega Man. That helped me survive solitude and a
+      complete lack of friends throughout primary school. Other games I was
+      lucky enough to discover — mainly through the website Macrojuegos — were
+      Super Smash Flash 2, Dragon Ball Devolution, Pokémon Yellow, and many
+      others whose names I can no longer remember but for which I still hold a
+      great deal of affection.
+    </p>
+
+    <figure class="games__figure games__figure--flash">
+      <div class="games__flash-grid">
+        <div class="games__flash-item">
+          <img
+            src="/media/games/super-smash-flash-2.webp"
+            alt="Super Smash Flash logo"
+            width="300"
+            height="231"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <div class="games__flash-item">
+          <img
+            src="/media/games/dragon-ball-devolution.webp"
+            alt="Cover art for Dragon Ball Devolution"
+            width="264"
+            height="352"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <div class="games__flash-item">
+          <img
+            src="/media/games/pokemon-yellow.webp"
+            alt="Cover art for Pokémon Red, Blue and Yellow"
+            width="546"
+            height="182"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+      </div>
+      <figcaption>
+        A few of the Flash games that kept me company: Super Smash Flash 2,
+        Dragon Ball Devolution and Pokémon Yellow.
+      </figcaption>
+    </figure>
+
+    <p>
+      Later, as puberty and adolescence arrived, I started playing PC titles
+      such as Grand Theft Auto, Age of Empires, Counter-Strike 1.6, PES 2014,
+      and many others. Around the age of 15 or 16 I became interested in horror
+      games like Resident Evil, Silent Hill, Yume Nikki, LISA, and many more. I
+      also began to enjoy fighting games such as Street Fighter II, Naruto
+      Ultimate Ninja Storm, Soul Calibur, and so on.
+    </p>
+
+    <p>
+      Among the ones I enjoyed the most during this period are, without a
+      doubt, EarthBound and Mother 3, among so many others.
+    </p>
+
+    <p>
+      These days I have found a taste for Touhou 6, and I have gone a long time
+      without being able to complete it even on normal mode.
+    </p>
+
+    <aside class="games__spotlight" aria-labelledby="games-crazy-zombie-title">
+      <div class="games__spotlight-copy">
+        <p class="games__kicker">One more for the list</p>
+        <h2 class="games__spotlight-title" id="games-crazy-zombie-title">
+          Crazy Zombie
+        </h2>
+        <p>
+          I also have to mention Crazy Zombie, another Flash game that kept me
+          company during those years. Its chaotic mix of anime characters and
+          zombie hordes was simple, addictive, and impossible to resist. I had
+          forgotten to mention it, but it deserves its place here just as much
+          as the rest.
+        </p>
+      </div>
+
+      <figure class="games__spotlight-figure">
+        <img
+          src="/media/games/crazy-zombie.webp"
+          alt="Screenshot from Crazy Zombie"
+          width="400"
+          height="400"
+          loading="lazy"
+          decoding="async"
+        />
+        <figcaption>Crazy Zombie, one of the Flash games I grew up with.</figcaption>
+      </figure>
+    </aside>
+
+    <p>
+      But well, that is enough nostalgia for today. I will surely keep playing
+      a few things, even if I cannot know for certain what they will be.
+    </p>
+  </div>
+
+  <section class="games__gallery" aria-labelledby="games-gallery-title">
+    <header class="games__gallery-header">
+      <p class="games__kicker">The collection</p>
+      <h2 class="games__gallery-title" id="games-gallery-title">Gallery</h2>
+      <p class="games__gallery-lede">
+        Every game mentioned in this entry, from emulators and Flash afternoons
+        to late-night horror sessions.
+      </p>
+    </header>
+
+    <ul class="games__gallery-grid">
+      {
+        gallery.map((game) => (
+          <li class="games__gallery-item">
+            <figure class="games__gallery-card">
+              <img
+                class="games__gallery-image"
+                src={game.src}
+                alt={game.alt}
+                width={game.width}
+                height={game.height}
+                loading="lazy"
+                decoding="async"
+              />
+              <figcaption class="games__gallery-caption">
+                {game.name}
+              </figcaption>
+            </figure>
+          </li>
+        ))
+      }
+    </ul>
+
+    <p class="games__gallery-note">
+      All cover art, logos, and trademarks belong to their respective owners.
+    </p>
+  </section>
+</div>
+
+<style>
+  .games {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(2.5rem, 6vh, 4rem);
+  }
+
+  .games__intro {
+    max-width: 48rem;
+    margin-inline: auto;
+  }
+
+  .games__kicker {
+    margin: 0 0 0.6rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-title);
+  }
+
+  .games__lede {
+    max-width: 48rem;
+    margin: 0;
+    font-size: clamp(1.15rem, 1.6vw, 1.4rem);
+    line-height: 1.7;
+    color: #ffffff;
+    text-wrap: pretty;
+  }
+
+  .games__meta {
+    margin: 1rem 0 0;
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255, 226, 234, 0.58);
+  }
+
+  .games__prose {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1.1rem, 2.2vh, 1.6rem);
+  }
+
+  .games__prose > p {
+    max-width: 48rem;
+    margin: 0 auto;
+    font-size: clamp(1rem, 1.1vw, 1.08rem);
+    line-height: 1.8;
+    color: rgba(255, 233, 238, 0.92);
+    text-wrap: pretty;
+  }
+
+  .games__figure {
+    width: 100%;
+    max-width: 60rem;
+    margin: clamp(0.6rem, 1.5vh, 1rem) auto;
+    padding: clamp(0.75rem, 2vw, 1.25rem);
+    background: linear-gradient(
+      160deg,
+      rgba(58, 4, 18, 0.5),
+      rgba(20, 2, 8, 0.42)
+    );
+    border: 1px solid rgba(255, 125, 150, 0.26);
+    border-radius: 1rem;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 226, 234, 0.05),
+      0 18px 40px rgba(0, 0, 0, 0.18);
+  }
+
+  .games__figure > img {
+    width: 100%;
+    max-height: 24rem;
+    margin-inline: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.35));
+  }
+
+  .games__figure figcaption,
+  .games__spotlight-figure figcaption {
+    margin-top: 0.9rem;
+    font-size: 0.78rem;
+    line-height: 1.45;
+    text-align: center;
+    color: rgba(255, 226, 234, 0.68);
+  }
+
+  .games__flash-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(0.5rem, 1.5vw, 1rem);
+    align-items: center;
+  }
+
+  .games__flash-item {
+    display: grid;
+    place-items: center;
+    min-height: 7rem;
+    padding: 0.5rem;
+    background-color: rgba(20, 2, 8, 0.35);
+    border: 1px solid rgba(255, 125, 150, 0.16);
+    border-radius: 0.65rem;
+  }
+
+  .games__flash-item img {
+    width: 100%;
+    height: 7.5rem;
+    object-fit: contain;
+    filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.35));
+  }
+
+  .games__spotlight {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    gap: clamp(1rem, 3vw, 2rem);
+    align-items: center;
+    width: 100%;
+    max-width: 60rem;
+    margin: clamp(1rem, 3vh, 2rem) auto;
+    padding: clamp(1rem, 3vw, 1.75rem);
+    background: linear-gradient(
+      135deg,
+      rgba(120, 6, 30, 0.38),
+      rgba(20, 2, 8, 0.45)
+    );
+    border: 1px solid rgba(255, 125, 150, 0.32);
+    border-radius: 1rem;
+  }
+
+  .games__spotlight-copy p:last-child {
+    margin: 0;
+    font-size: clamp(0.98rem, 1.05vw, 1.05rem);
+    line-height: 1.75;
+    color: rgba(255, 233, 238, 0.9);
+    text-wrap: pretty;
+  }
+
+  .games__spotlight-title {
+    margin: 0.25rem 0 0.75rem;
+    font-size: clamp(1.7rem, 3vw, 2.5rem);
+    line-height: 1;
+    letter-spacing: -0.01em;
+    color: var(--color-title);
+    text-shadow: 0 0 24px rgba(255, 90, 120, 0.3);
+  }
+
+  .games__spotlight-figure {
+    margin: 0;
+  }
+
+  .games__spotlight-figure img {
+    width: 100%;
+    border: 1px solid rgba(255, 125, 150, 0.22);
+    border-radius: 0.75rem;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+  }
+
+  .games__gallery {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1rem, 2.5vh, 1.6rem);
+    padding-top: clamp(1.5rem, 4vh, 2.5rem);
+    border-top: 1px solid rgba(255, 125, 150, 0.2);
+  }
+
+  .games__gallery-header {
+    max-width: 48rem;
+    margin-inline: auto;
+  }
+
+  .games__gallery-title {
+    margin: 0.2rem 0 0.5rem;
+    font-size: clamp(2.25rem, 5vw, 3.75rem);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    color: var(--color-title);
+    text-shadow: 0 0 24px rgba(255, 90, 120, 0.3);
+  }
+
+  .games__gallery-lede {
+    max-width: 44rem;
+    margin: 0;
+    font-size: clamp(0.98rem, 1.05vw, 1.05rem);
+    line-height: 1.7;
+    color: rgba(255, 233, 238, 0.82);
+    text-wrap: pretty;
+  }
+
+  .games__gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(0.65rem, 1.6vw, 1rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .games__gallery-item {
+    min-width: 0;
+  }
+
+  .games__gallery-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    margin: 0;
+    padding: 0.55rem;
+    background-color: rgba(20, 2, 8, 0.36);
+    border: 1px solid rgba(255, 125, 150, 0.24);
+    border-radius: 0.85rem;
+    transition:
+      transform 0.18s ease,
+      border-color 0.18s ease,
+      box-shadow 0.18s ease;
+  }
+
+  .games__gallery-image {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    padding: 0.35rem;
+    object-fit: contain;
+    filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.3));
+  }
+
+  .games__gallery-caption {
+    margin-top: 0.55rem;
+    font-size: clamp(0.72rem, 0.85vw, 0.82rem);
+    line-height: 1.25;
+    text-align: center;
+    color: rgba(255, 233, 238, 0.82);
+    transition: color 0.18s ease;
+  }
+
+  .games__gallery-note {
+    max-width: 48rem;
+    margin: 0.25rem auto 0;
+    font-size: 0.72rem;
+    line-height: 1.5;
+    color: rgba(255, 226, 234, 0.55);
+  }
+
+  @media (min-width: 40rem) {
+    .games__gallery-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 60rem) {
+    .games__gallery-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 44rem) {
+    .games__spotlight {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  @media (max-width: 36rem) {
+    .games__flash-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .games__gallery-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(255, 150, 170, 0.6);
+      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.3);
+    }
+
+    .games__gallery-card:hover .games__gallery-caption {
+      color: #ffffff;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .games__gallery-card,
+    .games__gallery-caption {
+      transition: none;
+    }
+  }
+</style>

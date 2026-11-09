@@ -1,21 +1,9 @@
 ---
 import { sectionNav } from '../content/sections';
-
-interface Props {
-  side?: 'a' | 'b';
-}
-
-const { side = 'b' } = Astro.props;
-const isSideA = side === 'a';
 ---
 
 <nav
-  class:list={[
-    'card',
-    'card--right',
-    'nav-card',
-    { 'nav-card--side-a': isSideA },
-  ]}
+  class="card card--right nav-card nav-card--side-a"
   aria-label="Main navigation"
 >
   <h2 class="nav-card__title">NAVY</h2>
@@ -37,21 +25,17 @@ const isSideA = side === 'a';
     }
   </ul>
 
-  {
-    isSideA && (
-      <div class="nav-card__visual">
-        <img
-          class="nav-card__animation"
-          src="/media/spin_head.svg"
-          alt=""
-          width="960"
-          height="540"
-          loading="eager"
-          decoding="async"
-        />
-      </div>
-    )
-  }
+  <div class="nav-card__visual">
+    <img
+      class="nav-card__animation"
+      src="/media/spin_head.svg"
+      alt=""
+      width="960"
+      height="540"
+      loading="eager"
+      decoding="async"
+    />
+  </div>
 </nav>
 
 <style>

@@ -1,0 +1,32 @@
+---
+import SideBSectionPageLayout from '../../layouts/SideBSectionPageLayout.astro';
+import AnimePage from '../../components/AnimePage.astro';
+import GamesPage from '../../components/GamesPage.astro';
+import LiteraturePage from '../../components/LiteraturePage.astro';
+import MusicPage from '../../components/MusicPage.astro';
+import { sideBSections } from '../../content/sideBSections';
+
+export function getStaticPaths() {
+  return sideBSections.map((section) => ({
+    params: { section: section.slug },
+    props: { section },
+  }));
+}
+
+const { section } = Astro.props as {
+  section: (typeof sideBSections)[number];
+};
+
+const pages = {
+  anime: AnimePage,
+  games: GamesPage,
+  literature: LiteraturePage,
+  music: MusicPage,
+} as const;
+
+const Page = pages[section.slug];
+---
+
+<SideBSectionPageLayout section={section} variant="article">
+  <Page />
+</SideBSectionPageLayout>

@@ -1,0 +1,217 @@
+// Literature section content. All visible text is in English.
+
+import type { SideBMediaGroup } from '../components/SideBMediaPage.astro';
+
+export const literatureIntro = [
+  "I'll keep this brief, since I am not as avid a reader as I am a musician or a gamer. I started out with lighter works such as:",
+];
+
+export const literatureGroups: SideBMediaGroup[] = [
+  {
+    heading: 'Early reads',
+    description: 'The books that introduced me to reading.',
+    layout: 'cover',
+    entries: [
+      {
+        title: 'The Little Prince',
+        subtitle: 'Antoine de Saint-Exupéry',
+        image: '/media/literature/the-little-prince.webp',
+        alt: 'Cover of The Little Prince',
+        width: 282,
+        height: 353,
+      },
+      {
+        title: 'The Adventures of Tom Sawyer',
+        subtitle: 'Mark Twain',
+        image: '/media/literature/tom-sawyer.webp',
+        alt: 'Cover of The Adventures of Tom Sawyer',
+        width: 458,
+        height: 640,
+      },
+      {
+        title: 'The Chronicles of Narnia',
+        subtitle: 'C. S. Lewis',
+        image: '/media/literature/narnia.webp',
+        alt: 'Cover of The Chronicles of Narnia',
+        width: 254,
+        height: 392,
+      },
+      {
+        title: 'Ali Baba and the Forty Thieves',
+        subtitle: 'One Thousand and One Nights',
+        image: '/media/literature/ali-baba.webp',
+        alt: 'Cover of Ali Baba and the Forty Thieves',
+        width: 263,
+        height: 416,
+      },
+    ],
+  },
+  {
+    heading: 'The turning point',
+    description:
+      'Everything changed when I decided to read The Diary of a Young Girl. It meant a 180-degree turn in the way I think.',
+    layout: 'cover',
+    entries: [
+      {
+        title: 'The Diary of a Young Girl',
+        subtitle: 'Anne Frank',
+        note: 'The book that changed my way of thinking.',
+        image: '/media/literature/anne-frank.webp',
+        alt: 'Cover of The Diary of a Young Girl',
+        width: 250,
+        height: 383,
+      },
+    ],
+  },
+  {
+    heading: 'Coming back to reading',
+    description:
+      'For a long time I read practically nothing, until I picked it up again literally last year. Since then I have read a lot. Some of those books are:',
+    layout: 'cover',
+    entries: [
+      {
+        title: 'The Art of Loving',
+        subtitle: 'Erich Fromm',
+        image: '/media/literature/the-art-of-loving.webp',
+        alt: 'Cover of The Art of Loving',
+        width: 231,
+        height: 352,
+      },
+      {
+        title: 'Divine Comedy',
+        subtitle: 'Dante Alighieri',
+        image: '/media/literature/divine-comedy.webp',
+        alt: 'Cover of the Divine Comedy',
+        width: 439,
+        height: 640,
+      },
+      {
+        title: 'The Republic',
+        subtitle: 'Plato',
+        image: '/media/literature/the-republic.webp',
+        alt: 'Cover of The Republic',
+        width: 442,
+        height: 640,
+      },
+      {
+        title: 'Meditations on First Philosophy',
+        subtitle: 'René Descartes',
+        image: '/media/literature/meditations.webp',
+        alt: 'Cover of Meditations on First Philosophy',
+        width: 395,
+        height: 640,
+      },
+      {
+        title: 'Thus Spoke Zarathustra',
+        subtitle: 'Friedrich Nietzsche',
+        image: '/media/literature/thus-spoke-zarathustra.webp',
+        alt: 'Cover of Thus Spoke Zarathustra',
+        width: 416,
+        height: 640,
+      },
+      {
+        title: 'The Antichrist',
+        subtitle: 'Friedrich Nietzsche',
+        image: '/media/literature/the-antichrist.webp',
+        alt: 'Cover of The Antichrist',
+        width: 249,
+        height: 399,
+      },
+      {
+        title: 'Beyond Good and Evil',
+        subtitle: 'Friedrich Nietzsche',
+        image: '/media/literature/beyond-good-and-evil.webp',
+        alt: 'Cover of Beyond Good and Evil',
+        width: 269,
+        height: 424,
+      },
+      {
+        title: 'The Prince',
+        subtitle: 'Niccolò Machiavelli',
+        image: '/media/literature/the-prince.webp',
+        alt: 'Cover of The Prince',
+        width: 454,
+        height: 640,
+      },
+      {
+        title: 'The Mediocre Man',
+        subtitle: 'José Ingenieros',
+        image: '/media/literature/the-mediocre-man.webp',
+        alt: 'Cover of The Mediocre Man',
+        width: 437,
+        height: 640,
+      },
+      {
+        title: 'Critique of Pure Reason',
+        subtitle: 'Immanuel Kant',
+        note: 'Read partially.',
+        image: '/media/literature/critique-of-pure-reason.webp',
+        alt: 'Cover of the Critique of Pure Reason',
+        width: 382,
+        height: 640,
+      },
+      {
+        title: 'The Time Machine',
+        subtitle: 'H. G. Wells',
+        image: '/media/literature/the-time-machine.webp',
+        alt: 'Cover of The Time Machine',
+        width: 323,
+        height: 511,
+      },
+      {
+        title: 'Don Quixote',
+        subtitle: 'Miguel de Cervantes',
+        note: 'Both parts: The Ingenious Gentleman and The Ingenious Knight.',
+        image: '/media/literature/don-quixote.webp',
+        alt: 'Cover of Don Quixote',
+        width: 399,
+        height: 640,
+      },
+      {
+        title: 'The Stranger',
+        subtitle: 'Albert Camus',
+        image: '/media/literature/the-stranger.webp',
+        alt: 'Cover of The Stranger',
+        width: 411,
+        height: 640,
+      },
+      {
+        title: 'The Fall',
+        subtitle: 'Albert Camus',
+        image: '/media/literature/the-fall.webp',
+        alt: 'Cover of The Fall',
+        width: 427,
+        height: 640,
+      },
+      {
+        title: 'The Plague',
+        subtitle: 'Albert Camus',
+        image: '/media/literature/the-plague.webp',
+        alt: 'Cover of The Plague',
+        width: 400,
+        height: 640,
+      },
+      {
+        title: 'God and the State',
+        subtitle: 'Mikhail Bakunin',
+        image: '/media/literature/god-and-the-state.webp',
+        alt: 'Cover of God and the State',
+        width: 422,
+        height: 640,
+      },
+      {
+        title: 'The Conquest of Bread',
+        subtitle: 'Peter Kropotkin',
+        note: 'Still reading.',
+        image: '/media/literature/the-conquest-of-bread.webp',
+        alt: 'Cover of The Conquest of Bread',
+        width: 400,
+        height: 600,
+      },
+    ],
+  },
+];
+
+export const literatureClosing = [
+  'I should also say that writing is an interesting activity, although I do not write for anyone to read it. I simply do it to express myself and let off steam.',
+];

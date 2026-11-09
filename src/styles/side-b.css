@@ -1,0 +1,94 @@
+html.side-b-root {
+  color-scheme: dark;
+  background-color: #0b0104;
+}
+
+html.side-b-skip-intro .side-b-intro {
+  display: none;
+}
+
+body.side-b {
+  --color-background: #140208;
+  --color-surface: rgba(120, 6, 30, 0.3);
+  --color-text: #ffe9ee;
+  --color-title: #ffb0c2;
+  --color-border: rgba(255, 125, 150, 0.42);
+  --header-banner-fit: contain;
+
+  background-color: #140208;
+  background-image: url("/media/background_Side_B.jpg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  color: var(--color-text);
+}
+
+body.side-b ::selection {
+  background-color: rgba(255, 125, 150, 0.4);
+  color: #ffffff;
+}
+
+body.side-b .main-card,
+body.side-b .card {
+  backdrop-filter: blur(3px) saturate(1.1);
+}
+
+body.side-b .side-switcher {
+  color: rgba(255, 226, 234, 0.78);
+  background-color: rgba(28, 2, 9, 0.58);
+  border-color: rgba(255, 125, 150, 0.42);
+  backdrop-filter: blur(4px);
+}
+
+body.side-b .side-switcher:hover {
+  color: #ffffff;
+  background-color: rgba(58, 4, 18, 0.82);
+  border-color: rgba(255, 150, 170, 0.65);
+}
+
+body.side-b .side-switcher:focus-visible {
+  outline-color: var(--color-text);
+}
+
+body.side-b .card--header {
+  border: 0;
+}
+
+/* Side B: CI and CD span the full height, while CU and CM split the
+   center column into two equal halves. */
+@media (min-width: 54.0625rem) {
+  body.side-b .main-card {
+    grid-template-areas:
+      "left header right"
+      "left center right";
+    grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+
+body.side-b .card--left {
+  justify-content: flex-start;
+}
+
+body.side-b .left-card__image--full,
+body.side-b .nav-card__image {
+  border-radius: 0.75rem;
+  border: 2px solid rgba(255, 205, 215, 0.45);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+}
+
+body.side-b .left-card__image--full {
+  --ci-image-gap: clamp(0.5rem, 1.5vh, 1rem);
+
+  width: auto;
+  height: auto;
+  max-width: calc(100% - 2 * var(--ci-image-gap));
+  max-height: min(28vh, 17rem);
+  margin: var(--ci-image-gap);
+}
+
+@media (min-width: 54.0625rem) and (max-height: 42rem) {
+  body.side-b .left-card__image--full {
+    max-height: min(22vh, 11rem);
+  }
+}

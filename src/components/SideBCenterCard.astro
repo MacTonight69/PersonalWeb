@@ -1,0 +1,221 @@
+<section
+  class="card card--center center-card center-card--side-b"
+  aria-labelledby="side-b-call-title"
+>
+  <div class="center-card__content center-card__content--side-b">
+    <h1 class="center-card__title center-card__title--side-b" id="side-b-call-title">
+      It's dangerous to go alone! Take this
+    </h1>
+
+    <div class="pickup">
+      <button class="pickup__button" type="button" aria-label="Play the animation">
+        <img
+          class="pickup__still"
+          src="/media/banner_Side_B_still.webp"
+          alt=""
+          width="480"
+          height="270"
+          loading="eager"
+          decoding="async"
+        />
+        <img
+          class="pickup__gif"
+          data-src="/media/banner_Side_B.gif"
+          alt=""
+          width="480"
+          height="270"
+          aria-hidden="true"
+        />
+      </button>
+    </div>
+
+    <div class="center-card__message">
+      <h2 class="center-card__message-title">What's up</h2>
+      <p class="center-card__message-text">
+        Here you can find some information about my hobbies, preferences and
+        all those things I do when I'm not thinking about computers, work and
+        studying. Feel free to criticize the entire page from beginning to end;
+        I won't listen to you anyway.
+      </p>
+    </div>
+  </div>
+</section>
+
+<script>
+  const GIF_DURATION = 2700;
+
+  const card = document.querySelector<HTMLElement>('.center-card--side-b');
+  const pickup = document.querySelector<HTMLElement>('.pickup');
+  const button = pickup?.querySelector<HTMLButtonElement>('.pickup__button');
+  const gif = pickup?.querySelector<HTMLImageElement>('.pickup__gif');
+  const gifSrc = gif?.dataset.src;
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  let isPlaying = false;
+  let timerStarted = false;
+
+  function finish(): void {
+    if (!pickup || !button) return;
+    pickup.hidden = true;
+    card?.classList.add('is-finished');
+    button.removeAttribute('aria-busy');
+  }
+
+  function startTimer(): void {
+    if (timerStarted) return;
+    timerStarted = true;
+    window.setTimeout(finish, GIF_DURATION);
+  }
+
+  button?.addEventListener('click', () => {
+    if (!pickup || !button || !gif || !gifSrc || isPlaying || pickup.hidden) {
+      return;
+    }
+
+    isPlaying = true;
+
+    if (reduceMotion.matches) {
+      finish();
+      return;
+    }
+
+    button.disabled = true;
+    button.setAttribute('aria-busy', 'true');
+    pickup.classList.add('is-playing');
+
+    gif.addEventListener('load', startTimer, { once: true });
+    gif.src = gifSrc;
+
+    if (gif.complete && gif.naturalWidth > 0) {
+      startTimer();
+    }
+  });
+</script>
+
+<style>
+  .center-card--side-b {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .center-card__content--side-b {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(1rem, 3vh, 2rem);
+    width: 100%;
+    max-width: 36rem;
+    text-align: center;
+  }
+
+  .center-card__title--side-b {
+    margin: 0;
+    font-size: clamp(1.5rem, 2.4vw, 2.4rem);
+    line-height: 1.2;
+    text-wrap: balance;
+    color: var(--color-title);
+    text-shadow: 0 0 24px rgba(255, 90, 120, 0.35);
+  }
+
+  .center-card--side-b.is-finished .center-card__title--side-b {
+    display: none;
+  }
+
+  .center-card__message {
+    display: none;
+    flex-direction: column;
+    gap: clamp(0.75rem, 2vh, 1.25rem);
+    width: 100%;
+    max-width: 34rem;
+    margin-inline: auto;
+    text-align: left;
+  }
+
+  .center-card--side-b.is-finished .center-card__message {
+    display: flex;
+    animation: message-in 320ms ease both;
+  }
+
+  .center-card__message-title {
+    margin: 0;
+    font-size: clamp(1.75rem, 3vw, 2.75rem);
+    line-height: 1.1;
+    text-align: center;
+    color: var(--color-title);
+    text-shadow: 0 0 24px rgba(255, 90, 120, 0.35);
+  }
+
+  .center-card__message-text {
+    margin: 0;
+    font-size: clamp(0.95rem, 1.2vw, 1.1rem);
+    line-height: 1.7;
+    color: var(--color-text);
+    text-wrap: pretty;
+  }
+
+  @keyframes message-in {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .center-card--side-b.is-finished .center-card__message {
+      animation: none;
+    }
+  }
+
+  .pickup {
+    width: clamp(14rem, 40vh, 24rem);
+    max-width: 100%;
+    aspect-ratio: 480 / 270;
+  }
+
+  .pickup__button {
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .pickup__still,
+  .pickup__gif {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 0 18px rgba(255, 90, 120, 0.35));
+  }
+
+  .pickup__gif {
+    display: none;
+  }
+
+  .pickup.is-playing .pickup__still {
+    display: none;
+  }
+
+  .pickup.is-playing .pickup__gif {
+    display: block;
+  }
+
+  .pickup__button:focus-visible {
+    outline: 2px solid var(--color-text);
+    outline-offset: 6px;
+    border-radius: 0.5rem;
+  }
+
+  .pickup__button:disabled {
+    cursor: default;
+  }
+</style>

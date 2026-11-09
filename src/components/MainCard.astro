@@ -2,7 +2,9 @@
 import HeaderCard from './HeaderCard.astro';
 import LeftCard from './LeftCard.astro';
 import CenterCard from './CenterCard.astro';
+import SideBCenterCard from './SideBCenterCard.astro';
 import RightCard from './RightCard.astro';
+import SideBNavCard from './SideBNavCard.astro';
 
 interface Props {
   side?: 'a' | 'b';
@@ -16,18 +18,17 @@ const isSideA = side === 'a';
   <HeaderCard
     bannerSrc={isSideA
       ? '/images/banner_glitch_CA.svg'
-      : '/images/banner-placeholder.svg'}
+      : '/media/banner_sharingan_carmesi.svg'}
     bannerAlt="Page banner"
+    bannerWidth={isSideA ? 1600 : 320}
+    bannerHeight={isSideA ? 400 : 181}
   />
   <LeftCard
-    profileSrc={isSideA
-      ? '/media/PFP_Side_A.gif'
-      : '/images/profile-placeholder.svg'}
+    profileSrc={isSideA ? '/media/PFP_Side_A.gif' : '/media/PFP_Side_B.gif'}
     profileAlt="Profile picture"
-    profileWidth={isSideA ? 500 : 120}
-    profileHeight={isSideA ? 370 : 120}
-    profileFullWidth={isSideA}
+    profileWidth={isSideA ? 500 : 360}
+    profileHeight={isSideA ? 370 : 360}
   />
-  <CenterCard />
-  <RightCard side={side} />
+  {isSideA ? <CenterCard /> : <SideBCenterCard />}
+  {isSideA ? <RightCard /> : <SideBNavCard />}
 </main>

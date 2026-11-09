@@ -1,6 +1,6 @@
 ---
 interface Props {
-  bannerSrc?: string;
+  bannerSrc?: string | null;
   bannerAlt?: string;
   bannerWidth?: number;
   bannerHeight?: number;
@@ -15,14 +15,18 @@ const {
 ---
 
 <header class="card card--header header-card">
-  <img
-    class="header-card__banner"
-    src={bannerSrc}
-    alt={bannerAlt}
-    width={bannerWidth}
-    height={bannerHeight}
-    loading="eager"
-  />
+  {
+    bannerSrc && (
+      <img
+        class="header-card__banner"
+        src={bannerSrc}
+        alt={bannerAlt}
+        width={bannerWidth}
+        height={bannerHeight}
+        loading="eager"
+      />
+    )
+  }
 </header>
 
 <style>

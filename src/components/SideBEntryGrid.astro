@@ -1,0 +1,64 @@
+---
+import SideBEntryCard from './SideBEntryCard.astro';
+
+export interface SideBEntry {
+  title: string;
+  subtitle?: string;
+  note?: string;
+  image: string;
+  alt: string;
+  width: number;
+  height: number;
+}
+
+interface Props {
+  entries: SideBEntry[];
+  layout?: 'poster' | 'cover' | 'album';
+}
+
+const { entries, layout = 'poster' } = Astro.props;
+---
+
+<ul class:list={['entry-grid', `entry-grid--${layout}`]}>
+  {
+    entries.map((entry) => (
+      <SideBEntryCard {...entry} layout={layout} />
+    ))
+  }
+</ul>
+
+<style>
+  .entry-grid {
+    display: grid;
+    gap: clamp(0.75rem, 1.6vw, 1rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .entry-grid--poster,
+  .entry-grid--album {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .entry-grid--cover {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (min-width: 48rem) {
+    .entry-grid--poster,
+    .entry-grid--album {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .entry-grid--cover {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 60rem) {
+    .entry-grid--cover {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+</style>

@@ -1,0 +1,163 @@
+---
+import SideBEntryGrid, { type SideBEntry } from './SideBEntryGrid.astro';
+
+export interface SideBMediaGroup {
+  heading: string;
+  level?: 2 | 3;
+  description?: string;
+  entries?: SideBEntry[];
+  layout?: 'poster' | 'cover' | 'album';
+}
+
+interface Props {
+  kicker?: string;
+  intro: string[];
+  groups: SideBMediaGroup[];
+  closing?: string[];
+}
+
+const { kicker, intro, groups, closing } = Astro.props;
+---
+
+<div class="media-page">
+  <header class="media-page__intro">
+    {kicker && <p class="media-page__kicker">{kicker}</p>}
+    {
+      intro.map((paragraph) => (
+        <p class="media-page__lede">{paragraph}</p>
+      ))
+    }
+  </header>
+
+  {
+    groups.map((group, index) => {
+      const Heading = (group.level === 3 ? 'h3' : 'h2') as 'h2' | 'h3';
+      const id = `media-group-${index}`;
+
+      return (
+        <section class:list={['media-page__group', group.level === 3 && 'media-page__group--sub']} aria-labelledby={id}>
+          <header class="media-page__group-header">
+            <Heading class="media-page__group-title" id={id}>
+              {group.heading}
+            </Heading>
+            {group.description && (
+              <p class="media-page__group-desc">{group.description}</p>
+            )}
+          </header>
+
+          {group.entries && group.entries.length > 0 && (
+            <SideBEntryGrid
+              entries={group.entries}
+              layout={group.layout ?? 'album'}
+            />
+          )}
+        </section>
+      );
+    })
+  }
+
+  {
+    closing && closing.length > 0 && (
+      <footer class="media-page__closing">
+        {closing.map((paragraph) => (
+          <p>{paragraph}</p>
+        ))}
+      </footer>
+    )
+  }
+</div>
+
+<style>
+  .media-page {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(2.5rem, 6vh, 4rem);
+  }
+
+  .media-page__intro {
+    max-width: 48rem;
+    margin-inline: auto;
+  }
+
+  .media-page__kicker {
+    margin: 0 0 0.6rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-title);
+  }
+
+  .media-page__lede {
+    margin: 0;
+    font-size: clamp(1.05rem, 1.45vw, 1.28rem);
+    line-height: 1.7;
+    color: #ffffff;
+    text-wrap: pretty;
+  }
+
+  .media-page__lede + .media-page__lede {
+    margin-top: 0.9rem;
+  }
+
+  .media-page__group {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1rem, 2.5vh, 1.5rem);
+  }
+
+  .media-page__group + .media-page__group {
+    padding-top: clamp(1.5rem, 4vh, 2.5rem);
+    border-top: 1px solid rgba(255, 125, 150, 0.18);
+  }
+
+  .media-page__group-header {
+    max-width: 48rem;
+    margin-inline: auto;
+  }
+
+  .media-page__group-title {
+    margin: 0;
+    font-size: clamp(1.9rem, 3.8vw, 2.9rem);
+    line-height: 1;
+    letter-spacing: -0.01em;
+    color: var(--color-title);
+    text-shadow: 0 0 24px rgba(255, 90, 120, 0.28);
+    text-wrap: balance;
+  }
+
+  .media-page__group--sub .media-page__group-title {
+    font-size: clamp(1.4rem, 2.6vw, 1.9rem);
+    color: var(--color-text);
+    text-shadow: none;
+  }
+
+  .media-page__group-desc {
+    max-width: 46rem;
+    margin: 0.7rem 0 0;
+    font-size: clamp(0.98rem, 1.05vw, 1.05rem);
+    line-height: 1.7;
+    color: rgba(255, 233, 238, 0.84);
+    text-wrap: pretty;
+  }
+
+  .media-page__closing {
+    max-width: 48rem;
+    margin-inline: auto;
+    padding-top: clamp(1.5rem, 4vh, 2.5rem);
+    border-top: 1px solid rgba(255, 125, 150, 0.18);
+  }
+
+  .media-page__closing p {
+    margin: 0;
+    font-size: clamp(1rem, 1.1vw, 1.08rem);
+    line-height: 1.8;
+    color: rgba(255, 233, 238, 0.9);
+    text-wrap: pretty;
+  }
+
+  .media-page__closing p + p {
+    margin-top: 0.8rem;
+  }
+</style>
