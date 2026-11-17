@@ -84,9 +84,10 @@ El cambio de lado se realiza con `SideToggle.astro`, un `<button>` situado junto
 1. Se pulsa el botón de lado.
 2. Se muestra `section.mp4` a pantalla completa, completo y sin deformación, silenciado, durante sus 4,77 s.
 3. Se puede saltar con clic, Escape, Enter o Espacio.
-4. Al terminar el video se aplica el nuevo lado: tema, banner, PFP, animación de CD y lista de secciones.
+4. A los 0,5 s del inicio, el nuevo lado se aplica debajo de la capa: tema, banner, PFP, animación de CD, lista de secciones y Home. El cambio no se ve.
 5. CM queda en Home y el cifrado de la navegación se apaga.
-6. Con `prefers-reduced-motion: reduce` el lado cambia de inmediato, sin video.
+6. Al terminar el video —o al saltarlo— solo se retira la capa; el nuevo lado ya está montado.
+7. Con `prefers-reduced-motion: reduce` el lado cambia de inmediato, sin video.
 
 Durante el video la interfaz queda cubierta, por lo que no se puede iniciar otra acción. El cambio de sección no reproduce este video.
 
@@ -388,6 +389,7 @@ npx tsc --noEmit
 - Texto de sección en CM con tipeo y scroll interno.
 - Destello del GIF dentro de CM.
 - Transición en video a pantalla completa al cambiar de lado.
+- El nuevo lado se aplica 0,5 s después de iniciar el video, oculto bajo la capa.
 - Cifrado cada 0,5 s de la entrada activa de CD, con longitud constante; Home arranca cifrada al cargar.
 - Cifrados con letras, dígitos y símbolos ASCII.
 - Banners glitch propios para Side A y Side B.

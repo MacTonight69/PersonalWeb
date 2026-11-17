@@ -545,7 +545,6 @@ function playTransitionVideo(): Promise<void> {
       transition.removeEventListener('click', onSkip);
       window.removeEventListener('keydown', onKey);
       transitionVideo.pause();
-      transition.hidden = true;
     };
 
     const finish = (): void => {
@@ -583,6 +582,11 @@ function playTransitionVideo(): Promise<void> {
     const playback = transitionVideo.play();
     if (playback) playback.catch(() => finish());
   });
+}
+
+function hideTransition(): void {
+  if (transition) transition.hidden = true;
+  transitionVideo?.pause();
 }
 
 function playCardFlash(duration: number): Promise<void> {
@@ -657,9 +661,6 @@ function setSide(next: Side): void {
   abortTyping();
   document.querySelectorAll('.cm-flash').forEach((flash) => flash.remove());
 
-  if (transition) transition.hidden = true;
-  transitionVideo?.pause();
-
   root.dataset.side = side;
 
   const target = side === 'a' ? 'Side B' : 'Side A';
@@ -701,11 +702,23 @@ async function changeSide(): Promise<void> {
   }
 
   isChangingSide = true;
+  let sideApplied = false;
+
+  const applySide = (): void => {
+    if (sideApplied) return;
+    sideApplied = true;
+    setSide(next);
+  };
+
+  const playback = playTransitionVideo();
+  const switchTimer = window.setTimeout(applySide, 500);
 
   try {
-    await playTransitionVideo();
-    setSide(next);
+    await playback;
+    applySide();
+    hideTransition();
   } finally {
+    window.clearTimeout(switchTimer);
     isChangingSide = false;
   }
 }
