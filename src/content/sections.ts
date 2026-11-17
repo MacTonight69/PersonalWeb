@@ -1,12 +1,10 @@
-export type SectionBlock =
-  | { type: "paragraph"; text: string }
-  | { type: "heading"; text: string }
-  | { type: "terms"; items: { term: string; description: string }[] };
-
-interface SectionContent {
-  title: string;
-  blocks: SectionBlock[];
-}
+import type { SectionContent, SectionEntry } from './types';
+import {
+  animeBlocks,
+  gamesBlocks,
+  literatureBlocks,
+  musicBlocks,
+} from './sideB';
 
 const profileSection: SectionContent = {
   title: "Professional Profile",
@@ -179,23 +177,88 @@ const sections = {
   },
 } satisfies Record<string, SectionContent>;
 
-export const sectionContent = {
-  "perfil-profesional": profileSection,
-  ...sections,
-} satisfies Record<string, SectionContent>;
+const sideAEntries: SectionEntry[] = [
+  {
+    id: 'a-perfil-profesional',
+    side: 'a',
+    slug: 'perfil-profesional',
+    ...profileSection,
+  },
+  {
+    id: 'a-formacion',
+    side: 'a',
+    slug: 'formacion',
+    ...sections.formacion,
+  },
+  {
+    id: 'a-tecnologias',
+    side: 'a',
+    slug: 'tecnologias',
+    ...sections.tecnologias,
+  },
+  {
+    id: 'a-proyectos',
+    side: 'a',
+    slug: 'proyectos',
+    ...sections.proyectos,
+  },
+  {
+    id: 'a-organizacion',
+    side: 'a',
+    slug: 'organizacion',
+    ...sections.organizacion,
+  },
+  {
+    id: 'a-vista-a-futuro',
+    side: 'a',
+    slug: 'vista-a-futuro',
+    ...sections['vista-a-futuro'],
+    binary: true,
+  },
+];
 
-type SectionSlug = keyof typeof sectionContent;
+const sideBEntries: SectionEntry[] = [
+  {
+    id: 'b-games',
+    side: 'b',
+    slug: 'games',
+    title: 'Games',
+    blocks: gamesBlocks,
+  },
+  {
+    id: 'b-anime',
+    side: 'b',
+    slug: 'anime',
+    title: 'Anime',
+    blocks: animeBlocks,
+  },
+  {
+    id: 'b-music',
+    side: 'b',
+    slug: 'music',
+    title: 'Music',
+    blocks: musicBlocks,
+  },
+  {
+    id: 'b-literature',
+    side: 'b',
+    slug: 'literature',
+    title: 'Literature',
+    blocks: literatureBlocks,
+  },
+];
 
-export const sectionOrder = [
-  "perfil-profesional",
-  "formacion",
-  "tecnologias",
-  "proyectos",
-  "organizacion",
-  "vista-a-futuro",
-] as const satisfies readonly SectionSlug[];
+export const sectionEntries: SectionEntry[] = [
+  ...sideAEntries,
+  ...sideBEntries,
+];
 
-export const sectionNav = sectionOrder.map((slug) => ({
-  slug,
-  label: sectionContent[slug].title,
-}));
+export const sectionNavA = [
+  { id: 'a-home', title: 'Home' },
+  ...sideAEntries.map(({ id, title }) => ({ id, title })),
+];
+
+export const sectionNavB = [
+  { id: 'b-home', title: 'Home' },
+  ...sideBEntries.map(({ id, title }) => ({ id, title })),
+];

@@ -1,104 +1,113 @@
-<section class="card card--center center-card" aria-labelledby="layer-title">
-  <div class="center-card__content">
-    <h1
-      class="center-card__title typewriter-text"
-      id="layer-title"
-      data-typewriter
-      data-typewriter-speed="88"
-      aria-label="Layer: 088"
-    >
-      <span data-typewriter-content aria-hidden="true">Layer: 088</span>
-    </h1>
-    <p
-      class="center-card__text typewriter-text"
-      data-typewriter
-      data-typewriter-speed="24"
-      aria-label="You may be confused. Perhaps almost as much as I am. If you wish to discover who I am, perhaps this information will be of help. Be careful: they are watching us."
-    >
-      <span data-typewriter-content aria-hidden="true">
-        You may be confused. Perhaps almost as much as I am. If you wish to
-        discover who I am, perhaps this information will be of help. Be careful:
-        they are watching us.
-      </span>
-    </p>
+---
+import { sectionEntries } from '../content/sections';
+
+const sectionData = sectionEntries.map(
+  ({ id, side, title, blocks, binary }) => ({
+    id,
+    side,
+    title,
+    blocks,
+    binary: binary ?? false,
+  }),
+);
+---
+
+<section
+  class="card card--center center-card"
+  data-center-card
+  role="tabpanel"
+  id="cm-panel"
+  tabindex="0"
+  aria-labelledby="cm-title"
+  aria-busy="false"
+>
+  <div class="cm-viewport" data-cm-viewport>
+    <div class="cm-content">
+      <div class="cm-welcome" data-cm-welcome>
+        <h1
+          class="center-card__title cm-title"
+          id="cm-title"
+          aria-label="Layer: 088"
+        >
+          <span data-welcome-text data-speed="88" aria-hidden="true"
+            >Layer: 088</span
+          >
+        </h1>
+        <p
+          class="center-card__text cm-text"
+          id="cm-welcome-text"
+          aria-label="You may be confused. Perhaps almost as much as I am. If you wish to discover who I am, perhaps this information will be of help. Be careful: they are watching us."
+        >
+          <span data-welcome-text data-speed="24" aria-hidden="true">
+            You may be confused. Perhaps almost as much as I am. If you wish to
+            discover who I am, perhaps this information will be of help. Be
+            careful: they are watching us.
+          </span>
+        </p>
+      </div>
+
+      <div class="cm-section" data-cm-section hidden aria-hidden="true"></div>
+    </div>
   </div>
+
+  <div class="sr-only" data-cm-sr></div>
+  <p class="sr-only" aria-live="polite" data-cm-status></p>
 </section>
 
-<script>
-  const typewriterElements = Array.from(
-    document.querySelectorAll<HTMLElement>('[data-typewriter]'),
-  );
-  const intro = document.querySelector<HTMLElement>('.side-a-intro');
-  const reducedMotion = window.matchMedia(
-    '(prefers-reduced-motion: reduce)',
-  ).matches;
-  let hasStarted = false;
-  let sequenceDelay = 0;
-
-  function startTyping() {
-    if (hasStarted) return;
-    hasStarted = true;
-
-    typewriterElements.forEach((element) => {
-      const text = element.querySelector<HTMLElement>(
-        '[data-typewriter-content]',
-      );
-      if (!text) return;
-
-      const fullText = (text.textContent ?? '').replace(/\s+/g, ' ').trim();
-      if (reducedMotion) return;
-
-      const characters = Array.from(fullText);
-      const speed = Number(element.dataset.typewriterSpeed) || 24;
-      const initialDelay = sequenceDelay;
-      sequenceDelay += characters.length * speed + 240;
-      let characterIndex = 0;
-
-      text.textContent = '';
-      element.classList.add('is-typing');
-
-      const typeNextCharacter = () => {
-        if (characterIndex >= characters.length) {
-          element.classList.remove('is-typing');
-          return;
-        }
-
-        text.textContent += characters[characterIndex];
-        characterIndex += 1;
-        window.setTimeout(typeNextCharacter, speed);
-      };
-
-      window.setTimeout(typeNextCharacter, initialDelay);
-    });
-  }
-
-  if (
-    reducedMotion ||
-    !intro ||
-    document.documentElement.classList.contains('side-a-skip-intro') ||
-    getComputedStyle(intro).display === 'none'
-  ) {
-    startTyping();
-  } else {
-    intro.addEventListener('animationend', (event) => {
-      if (event.animationName === 'side-a-intro-dismiss') startTyping();
-    });
-  }
-</script>
+<script
+  type="application/json"
+  id="sections-data"
+  set:html={JSON.stringify(sectionData).replace(/</g, '\\u003c')}
+/>
 
 <style>
   .center-card {
+    position: relative;
     display: flex;
-    align-items: center;
+    align-items: stretch;
     justify-content: center;
   }
 
-  .center-card__content {
+  .cm-viewport {
+    flex: 1 1 auto;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    max-height: 100%;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border) transparent;
+  }
+
+  .cm-viewport::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .cm-viewport::-webkit-scrollbar-thumb {
+    background-color: var(--color-border);
+    border-radius: 999px;
+  }
+
+  .cm-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 100%;
+  }
+
+  .center-card.is-section .cm-content {
+    align-items: flex-start;
+  }
+
+  .cm-welcome {
+    width: 100%;
     max-width: 34rem;
     text-align: center;
   }
 
-  .center-card__title {
+  .cm-title {
     margin: 0;
     font-size: clamp(1.75rem, 2.5vw, 2.5rem);
     line-height: 1.15;
@@ -106,28 +115,116 @@
     color: var(--color-title);
   }
 
-  .center-card__text {
+  .cm-text {
     margin: 1rem 0 0;
     font-size: 1.0625rem;
     color: var(--color-text);
   }
 
-  .typewriter-text.is-typing::after {
-    content: "▌";
-    display: inline-block;
-    margin-left: 0.12em;
-    color: currentColor;
-    animation: typewriter-caret 0.8s steps(1, end) infinite;
+  .cm-section {
+    width: 100%;
+    max-width: 40rem;
+    margin-inline: auto;
   }
 
-  @keyframes typewriter-caret {
+  .cm-section .cm-title {
+    margin: 0 0 clamp(0.85rem, 2vh, 1.4rem);
+    font-size: clamp(1.6rem, 2.6vw, 2.4rem);
+    text-align: center;
+  }
+
+  .cm-body {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.85rem, 1.8vh, 1.2rem);
+  }
+
+  .cm-paragraph {
+    margin: 0;
+    font-size: clamp(0.95rem, 1.25vw, 1.08rem);
+    line-height: 1.65;
+    text-wrap: pretty;
+    color: var(--color-text);
+  }
+
+  .cm-heading {
+    margin: clamp(0.6rem, 1.6vh, 1.1rem) 0 0;
+    font-size: clamp(1.2rem, 1.8vw, 1.55rem);
+    line-height: 1.25;
+    color: var(--color-title);
+  }
+
+  .cm-terms {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.8rem, 1.8vh, 1.2rem);
+    margin: 0;
+  }
+
+  .cm-term {
+    padding-left: 1rem;
+    border-left: 2px solid var(--color-border);
+  }
+
+  .cm-term dt {
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--color-title);
+  }
+
+  .cm-term dd {
+    margin: 0.2rem 0 0;
+    font-size: clamp(0.9rem, 1.2vw, 1.05rem);
+    line-height: 1.6;
+    text-wrap: pretty;
+    color: var(--color-text);
+  }
+
+  .cm-section.is-binary .cm-paragraph,
+  .cm-section.is-binary .cm-heading {
+    font-family: 'Courier New', monospace;
+    font-size: clamp(0.8rem, 1vw, 0.95rem);
+    line-height: 1.9;
+    letter-spacing: 0.02em;
+    word-break: break-all;
+    overflow-wrap: anywhere;
+  }
+
+  .cm-section.is-binary .cm-heading {
+    margin-top: 1.6rem;
+  }
+
+  .cm-caret {
+    display: inline-block;
+    margin-left: 0.08em;
+    color: currentColor;
+    animation: cm-caret 0.8s steps(1, end) infinite;
+  }
+
+  .cm-flash {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+  }
+
+  @keyframes cm-caret {
     50% {
       opacity: 0;
     }
   }
 
+  @media (max-width: 54rem) {
+    .cm-viewport {
+      max-height: 68dvh;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
-    .typewriter-text.is-typing::after {
+    .cm-caret {
       animation: none;
     }
   }

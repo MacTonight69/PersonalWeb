@@ -1,0 +1,65 @@
+@font-face {
+  font-family: 'EASVHS';
+  src: url('/fonts/easvhs.ttf') format('truetype');
+  font-style: normal;
+  font-weight: normal;
+  font-display: swap;
+}
+
+html {
+  color-scheme: dark;
+}
+
+html[data-side='a'] {
+  --color-background: #000000;
+  --color-surface: #000000;
+  --color-text: #9dc7f0;
+  --color-title: #3b7bc4;
+  --color-border: #26619c;
+  --font-sans: 'EASVHS', 'Courier New', monospace;
+
+  background-color: #000000;
+}
+
+html[data-side='b'] {
+  --color-background: #140208;
+  --color-surface: #1b0209;
+  --color-text: #ffe9ee;
+  --color-title: #ffb0c2;
+  --color-border: rgba(255, 125, 150, 0.42);
+  --font-sans: 'EASVHS', 'Courier New', monospace;
+
+  background-color: #140208;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  --header-banner-fit: contain;
+}
+
+html[data-side='a'] ::selection {
+  background-color: #26619c;
+  color: #000000;
+}
+
+html[data-side='b'] ::selection {
+  background-color: rgba(255, 125, 150, 0.4);
+  color: #ffffff;
+}
+
+/* El filtro VHS pertenece únicamente a Side A. */
+html[data-side='b'] .vhs-overlay {
+  display: none;
+}
+
+/* En Side B los cards ganan un brillo carmesí muy leve. */
+html[data-side='b'] .main-card,
+html[data-side='b'] .card {
+  box-shadow: inset 0 0 42px rgba(255, 40, 80, 0.06);
+}
+
+html[data-side='b'] .card--header {
+  background-color: #000000;
+}

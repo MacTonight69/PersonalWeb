@@ -1,25 +1,67 @@
 ---
-import { sectionNav } from '../content/sections';
+import { sectionNavA, sectionNavB } from '../content/sections';
+import SideToggle from './SideToggle.astro';
 ---
 
-<nav
-  class="card card--right nav-card nav-card--side-a"
-  aria-label="Main navigation"
->
-  <h2 class="nav-card__title">NAVY</h2>
+<nav class="card card--right nav-card" aria-label="Sections">
+  <div class="nav-card__head">
+    <h2 class="nav-card__title">NAVY</h2>
+    <SideToggle label="Side B" />
+  </div>
 
-  <ul class="nav-card__list">
+  <ul
+    class="nav-card__list nav-card__list--a"
+    data-nav-list="a"
+    role="tablist"
+    aria-label="Side A sections"
+    aria-orientation="vertical"
+  >
     {
-      sectionNav.map(({ slug, label }) => (
-        <li class="nav-card__item">
-          <a
+      sectionNavA.map(({ id, title }) => (
+        <li class="nav-card__item" role="presentation">
+          <button
             class="nav-card__link"
-            href={`/${slug}`}
-            data-section-link
-            data-text={label}
+            type="button"
+            role="tab"
+            id={`tab-${id}`}
+            data-section-id={id}
+            data-text={title}
+            aria-label={title}
+            aria-controls="cm-panel"
+            aria-selected="false"
+            tabindex="-1"
           >
-            {label}
-          </a>
+            <span data-nav-label>{title}</span>
+          </button>
+        </li>
+      ))
+    }
+  </ul>
+
+  <ul
+    class="nav-card__list nav-card__list--b"
+    data-nav-list="b"
+    role="tablist"
+    aria-label="Side B sections"
+    aria-orientation="vertical"
+    hidden
+  >
+    {
+      sectionNavB.map(({ id, title }) => (
+        <li class="nav-card__item" role="presentation">
+          <button
+            class="nav-card__link"
+            type="button"
+            role="tab"
+            id={`tab-${id}`}
+            data-section-id={id}
+            aria-label={title}
+            aria-controls="cm-panel"
+            aria-selected="false"
+            tabindex="-1"
+          >
+            <span data-nav-label>{title}</span>
+          </button>
         </li>
       ))
     }
@@ -28,10 +70,15 @@ import { sectionNav } from '../content/sections';
   <div class="nav-card__visual">
     <img
       class="nav-card__animation"
+      data-nav-visual
       src="/media/spin_head.svg"
+      data-src-a="/media/spin_head.svg"
+      data-src-b="/media/i_dont_know_carmesi.svg"
+      data-width-a="960"
+      data-height-a="540"
+      data-width-b="960"
+      data-height-b="960"
       alt=""
-      width="960"
-      height="540"
       loading="eager"
       decoding="async"
     />
@@ -42,12 +89,20 @@ import { sectionNav } from '../content/sections';
   .nav-card {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: clamp(0.7rem, 1.5vh, 1rem);
+  }
+
+  .nav-card__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+    flex-wrap: wrap;
   }
 
   .nav-card__title {
     margin: 0;
-    font-size: clamp(2rem, 3vw, 3rem);
+    font-size: clamp(1.8rem, 2.6vw, 2.6rem);
     line-height: 1;
     letter-spacing: 0.08em;
     color: var(--color-title);
@@ -56,18 +111,30 @@ import { sectionNav } from '../content/sections';
   .nav-card__list {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.3rem;
     margin: 0;
     padding: 0;
     list-style: none;
   }
 
+  .nav-card__list--b {
+    gap: 0.4rem;
+  }
+
   .nav-card__link {
     position: relative;
     display: inline-block;
-    padding-block: 0.25rem;
+    width: 100%;
+    padding-block: 0.15rem;
+    font: inherit;
+    font-size: clamp(0.8rem, 0.95vw, 0.9rem);
+    line-height: 1.3;
+    text-align: left;
     color: var(--color-title);
+    background: none;
+    border: 0;
     text-decoration: none;
+    cursor: pointer;
   }
 
   .nav-card__link:hover,
@@ -81,37 +148,42 @@ import { sectionNav } from '../content/sections';
     outline-offset: 2px;
   }
 
-  .nav-card--side-a .nav-card__link::before,
-  .nav-card--side-a .nav-card__link::after {
+  .nav-card__list--a .nav-card__link[aria-selected='true'] {
+    color: var(--color-text);
+    text-shadow: 0 0 10px rgba(157, 199, 240, 0.45);
+  }
+
+  .nav-card__list--a .nav-card__link::before,
+  .nav-card__list--a .nav-card__link::after {
     content: attr(data-text);
     position: absolute;
     inset: 0;
-    padding-block: 0.25rem;
+    padding-block: 0.15rem;
     opacity: 0;
     pointer-events: none;
     white-space: nowrap;
   }
 
-  .nav-card--side-a .nav-card__link:hover,
-  .nav-card--side-a .nav-card__link:focus-visible {
+  .nav-card__list--a .nav-card__link:hover,
+  .nav-card__list--a .nav-card__link:focus-visible {
     animation: nav-link-glitch 0.36s steps(2, end) infinite;
   }
 
-  .nav-card--side-a .nav-card__link:hover::before,
-  .nav-card--side-a .nav-card__link:focus-visible::before,
-  .nav-card--side-a .nav-card__link:hover::after,
-  .nav-card--side-a .nav-card__link:focus-visible::after {
+  .nav-card__list--a .nav-card__link:hover::before,
+  .nav-card__list--a .nav-card__link:focus-visible::before,
+  .nav-card__list--a .nav-card__link:hover::after,
+  .nav-card__list--a .nav-card__link:focus-visible::after {
     opacity: 1;
   }
 
-  .nav-card--side-a .nav-card__link::before {
+  .nav-card__list--a .nav-card__link::before {
     color: #ff3b3b;
     text-shadow: 0 0 5px rgba(255, 59, 59, 0.65);
     mix-blend-mode: screen;
     animation: nav-link-glitch-top 0.42s steps(2, end) infinite;
   }
 
-  .nav-card--side-a .nav-card__link::after {
+  .nav-card__list--a .nav-card__link::after {
     color: #35d7ff;
     text-shadow: 0 0 5px rgba(53, 215, 255, 0.65);
     mix-blend-mode: screen;
@@ -185,19 +257,19 @@ import { sectionNav } from '../content/sections';
     }
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .nav-card--side-a .nav-card__link::before,
-    .nav-card--side-a .nav-card__link::after {
-      display: none;
-    }
+  .nav-card__list--b .nav-card__link {
+    color: var(--color-text);
+  }
 
-    .nav-card--side-a .nav-card__link:hover,
-    .nav-card--side-a .nav-card__link:focus-visible {
-      animation: none;
-    }
+  .nav-card__list--b .nav-card__link:hover,
+  .nav-card__list--b .nav-card__link:focus-visible,
+  .nav-card__list--b .nav-card__link[aria-selected='true'] {
+    color: var(--color-title);
+    text-shadow: 0 0 14px rgba(255, 90, 120, 0.4);
   }
 
   .nav-card__visual {
+    flex: 0 0 auto;
     width: 100%;
     margin-top: auto;
   }
@@ -205,5 +277,36 @@ import { sectionNav } from '../content/sections';
   .nav-card__animation {
     width: 100%;
     height: auto;
+  }
+
+  html[data-side='b'] .nav-card__animation {
+    padding: 18px;
+    filter: drop-shadow(0 0 18px rgba(255, 90, 120, 0.35));
+  }
+
+  @media (min-width: 54.0625rem) and (max-height: 50rem) {
+    .nav-card {
+      gap: 0.45rem;
+    }
+
+    .nav-card__title {
+      font-size: clamp(1.6rem, 2.2vw, 2.2rem);
+    }
+
+    .nav-card__list--b {
+      gap: 0.25rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nav-card__list--a .nav-card__link::before,
+    .nav-card__list--a .nav-card__link::after {
+      display: none;
+    }
+
+    .nav-card__list--a .nav-card__link:hover,
+    .nav-card__list--a .nav-card__link:focus-visible {
+      animation: none;
+    }
   }
 </style>

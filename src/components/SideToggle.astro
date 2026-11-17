@@ -1,0 +1,44 @@
+---
+interface Props {
+  label: string;
+}
+
+const { label } = Astro.props;
+---
+
+<button
+  class="side-toggle"
+  type="button"
+  data-side-toggle
+  aria-label={`Switch to ${label}`}
+  title={`Switch to ${label}`}
+>
+  {label}
+</button>
+
+<style>
+  .side-toggle {
+    flex: 0 0 auto;
+    font: inherit;
+    font-size: 0.8125rem;
+    line-height: 1;
+    padding: 0.45rem 0.7rem;
+    color: var(--color-text);
+    background-color: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .side-toggle:hover {
+    color: var(--color-background);
+    background-color: var(--color-title);
+    border-color: var(--color-title);
+  }
+
+  .side-toggle:focus-visible {
+    outline: 2px solid var(--color-text);
+    outline-offset: 2px;
+  }
+</style>

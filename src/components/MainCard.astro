@@ -2,33 +2,25 @@
 import HeaderCard from './HeaderCard.astro';
 import LeftCard from './LeftCard.astro';
 import CenterCard from './CenterCard.astro';
-import SideBCenterCard from './SideBCenterCard.astro';
 import RightCard from './RightCard.astro';
-import SideBNavCard from './SideBNavCard.astro';
-
-interface Props {
-  side?: 'a' | 'b';
-}
-
-const { side = 'b' } = Astro.props;
-const isSideA = side === 'a';
 ---
 
 <main class="main-card">
   <HeaderCard
-    bannerSrc={isSideA
-      ? '/images/banner_glitch_CA.svg'
-      : '/media/banner_sharingan_carmesi.svg'}
+    bannerSrc="/images/banner_glitch.svg"
+    bannerSrcSideB="/images/banner_glitch_B.svg"
     bannerAlt="Page banner"
-    bannerWidth={isSideA ? 1600 : 320}
-    bannerHeight={isSideA ? 400 : 181}
   />
   <LeftCard
-    profileSrc={isSideA ? '/media/PFP_Side_A.gif' : '/media/PFP_Side_B.gif'}
+    profileSrc="/media/PFP_Side_A.gif"
+    profileSrcSideB="/media/PFP_Side_B.gif"
     profileAlt="Profile picture"
-    profileWidth={isSideA ? 500 : 360}
-    profileHeight={isSideA ? 370 : 360}
+    profileWidth={500}
+    profileHeight={370}
+    profileWidthSideB={360}
+    profileHeightSideB={360}
+    profileFullWidth
   />
-  {isSideA ? <CenterCard /> : <SideBCenterCard />}
-  {isSideA ? <RightCard /> : <SideBNavCard />}
+  <CenterCard />
+  <RightCard />
 </main>

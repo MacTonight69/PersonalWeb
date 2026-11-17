@@ -1,0 +1,52 @@
+---
+import '../styles/global.css';
+import '../styles/themes.css';
+import SideAIntro from '../components/SideAIntro.astro';
+import SideTransition from '../components/SideTransition.astro';
+import VhsOverlay from '../components/VhsOverlay.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Personal Website',
+  description = 'Personal website of Bautista Alejandro Cafferata.',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" data-side="a">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#000000" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="preload" href="/media/carga_vhs.svg" as="image" />
+    <link rel="preload" href="/media/Intro_Side_A.gif" as="image" />
+    <link
+      rel="preload"
+      href="/fonts/easvhs.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin="anonymous"
+    />
+    <style is:inline>
+      html {
+        background-color: #000000;
+      }
+    </style>
+    <title>{title}</title>
+  </head>
+  <body>
+    <SideAIntro />
+    <SideTransition />
+    <VhsOverlay />
+    <slot />
+    <script>
+      import '../scripts/app';
+    </script>
+  </body>
+</html>
