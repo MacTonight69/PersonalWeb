@@ -81,6 +81,7 @@ import SideToggle from './SideToggle.astro';
       alt=""
       loading="eager"
       decoding="async"
+      draggable="false"
     />
   </div>
 </nav>
@@ -277,6 +278,8 @@ import SideToggle from './SideToggle.astro';
   .nav-card__animation {
     width: 100%;
     height: auto;
+    user-select: none;
+    -webkit-user-drag: none;
   }
 
   html[data-side='b'] .nav-card__animation {

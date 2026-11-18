@@ -58,6 +58,7 @@ Las secciones no tienen rutas propias. Al pulsar una sección de CD, su texto se
 - `spin_head.svg` como animación inferior de CD en Side A.
 - `PFP_Side_B.gif` como retrato de Side B.
 - `i_dont_know_carmesi.svg` como animación inferior de CD en Side B.
+- `pentagrama-baphomet_azulado_vhs.svg`, `angels_azulado_vhs.svg`, `angel_sword_azulado_vhs.svg`, `angels_dragon_azulado_vhs.svg` y `Minos_azulado_vhs.svg` como contenidos desbloqueables del código de acceso.
 - `section.mp4` (`public/media/section.mp4`) como transición al cambiar de lado.
 - `vhs-noise.svg` para el ruido del filtro VHS.
 
@@ -159,6 +160,7 @@ La distribución es la misma en ambos lados: CA arriba y CI/CM/CD en tres column
 - Side A: la animación va a sangre. Side B: lleva un padding de 18 px.
 - En alturas ≤ 800 px se compactan el título y los gaps de CD para que la lista y la animación sigan cabiendo.
 - Animación inferior: `spin_head.svg` en Side A, `i_dont_know_carmesi.svg` en Side B.
+- Ocho clics consecutivos sobre la animación, en cualquiera de los dos lados, abren el código de acceso en CM.
 
 ---
 
@@ -230,6 +232,26 @@ Con `prefers-reduced-motion: reduce` no se muestra el GIF, el texto aparece comp
 - Se apaga y restaura el texto original al cambiar de sección, volver a Home, cambiar de lado o comenzar la transición de lado.
 - Con `prefers-reduced-motion: reduce` permanece apagado.
 
+### Código de acceso
+
+- Se activa con ocho clics consecutivos sobre la animación inferior de CD, sin importar el lado. Si pasan más de 1,5 s entre clics, el conteo se reinicia.
+- CM sustituye su contenido por el formulario **Access code**: un campo numérico seguido de un botón **Submit**.
+- Un envío válido oculta el formulario y deja únicamente el contenido desbloqueado. Un envío vacío o no entero conserva el formulario y muestra una indicación.
+- Códigos reconocidos:
+
+| Código | Contenido |
+|---|---|
+| 616 | `pentagrama-baphomet_azulado_vhs.svg` |
+| 333 | `angels_azulado_vhs.svg` |
+| 666 | `angel_sword_azulado_vhs.svg` |
+| 369 | `angels_dragon_azulado_vhs.svg` |
+| 777 | `Minos_azulado_vhs.svg` |
+
+- Cualquier otro número entra en la rama por defecto: CM escribe una frase aleatoria del conjunto de respuestas desconocidas, con el mismo tipeo del resto del sitio.
+- La imagen se muestra completa, centrada y sin deformación, con un pie que indica el código y su etiqueta.
+- Volver a Home, abrir una sección o cambiar de lado cierra el código de acceso y limpia el formulario y el resultado.
+- Con `prefers-reduced-motion: reduce` el contenido aparece de inmediato, sin animación de entrada ni tipeo.
+
 El tipeo del mensaje de bienvenida conserva los tiempos originales: 88 ms por carácter en el título y 24 ms en el párrafo.
 
 ---
@@ -292,7 +314,12 @@ PersonalWeb/
 │   ├── fonts/easvhs.ttf
 │   ├── images/
 │   │   ├── banner_glitch.svg
-│   │   └── banner_glitch_B.svg
+│   │   ├── banner_glitch_B.svg
+│   │   ├── pentagrama-baphomet_azulado_vhs.svg
+│   │   ├── angels_azulado_vhs.svg
+│   │   ├── angel_sword_azulado_vhs.svg
+│   │   ├── angels_dragon_azulado_vhs.svg
+│   │   └── Minos_azulado_vhs.svg
 │   ├── media/
 │   │   ├── carga_vhs.svg
 │   │   ├── Intro_Side_A.gif
@@ -347,7 +374,7 @@ PersonalWeb/
 | `src/components/MainCard.astro` | CP y composición de las cuatro subcards |
 | `src/components/HeaderCard.astro` | Banner de CA; intercambia la variante A/B |
 | `src/components/LeftCard.astro` | Retrato y campos personales; datos para ambos lados |
-| `src/components/CenterCard.astro` | CM, bienvenida, secciones, datos serializados y destello |
+| `src/components/CenterCard.astro` | CM, bienvenida, secciones, código de acceso, datos serializados y destello |
 | `src/components/RightCard.astro` | NAVY, listas de secciones, botón de lado y animación |
 | `src/components/SideToggle.astro` | Botón de cambio de Side A/Side B |
 | `src/components/SideAIntro.astro` | Entrada VHS de 6,5 s |
@@ -401,6 +428,7 @@ npx tsc --noEmit
 - PFP de CI y animación de CD a ancho completo, con altura automática y proporción conservada.
 - Márgenes diferenciados en la PFP de CI (8 px en A, 18 px en B) y padding de 18 px en la animación de CD de Side B.
 - Texto de CI ligeramente mayor en ambos lados.
+- Código de acceso oculto tras ocho clics en la animación de CD, con cinco contenidos desbloqueables y respuesta aleatoria para códigos desconocidos.
 - Navegación con pestañas accesibles y foco itinerante.
 - Respeto de `prefers-reduced-motion`.
 - Limpieza de recursos, notas y datos sin uso.

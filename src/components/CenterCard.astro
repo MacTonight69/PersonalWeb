@@ -47,6 +47,141 @@ const sectionData = sectionEntries.map(
       </div>
 
       <div class="cm-section" data-cm-section hidden aria-hidden="true"></div>
+
+      <div class="cm-code" data-cm-code hidden>
+        <div class="cm-code__prompt" data-cm-code-prompt>
+          <h1 class="center-card__title cm-title cm-code__title">
+            Access code
+          </h1>
+          <form class="cm-code__form" data-cm-code-form novalidate>
+            <label class="sr-only" for="cm-code-input">Numeric code</label>
+            <input
+              class="cm-code__input"
+              id="cm-code-input"
+              data-cm-code-input
+              type="number"
+              inputmode="numeric"
+              step="1"
+              min="0"
+              autocomplete="off"
+              placeholder="000"
+              required
+            />
+            <button class="cm-code__submit" type="submit" data-cm-code-submit>
+              Submit
+            </button>
+          </form>
+          <p class="cm-code__hint" data-cm-code-hint aria-live="polite"></p>
+        </div>
+
+        <div class="cm-code__result" data-cm-code-result hidden>
+          <div
+            class="cm-code__entry"
+            data-cm-code-entry
+            data-code="616"
+            hidden
+          >
+            <figure class="cm-code__figure">
+              <img
+                class="cm-code__image"
+                src="/images/pentagrama-baphomet_azulado_vhs.svg"
+                alt="Baphomet pentagram rendered in VHS blue"
+                width="520"
+                height="520"
+                loading="lazy"
+                decoding="async"
+              />
+              <figcaption class="cm-code__caption">616 // SIGIL</figcaption>
+            </figure>
+          </div>
+
+          <div
+            class="cm-code__entry"
+            data-cm-code-entry
+            data-code="333"
+            hidden
+          >
+            <figure class="cm-code__figure">
+              <img
+                class="cm-code__image"
+                src="/images/angels_azulado_vhs.svg"
+                alt="Angels rendered in VHS blue"
+                width="643"
+                height="814"
+                loading="lazy"
+                decoding="async"
+              />
+              <figcaption class="cm-code__caption">333 // CHOIR</figcaption>
+            </figure>
+          </div>
+
+          <div
+            class="cm-code__entry"
+            data-cm-code-entry
+            data-code="666"
+            hidden
+          >
+            <figure class="cm-code__figure">
+              <img
+                class="cm-code__image"
+                src="/images/angel_sword_azulado_vhs.svg"
+                alt="Angel holding a sword rendered in VHS blue"
+                width="778"
+                height="1000"
+                loading="lazy"
+                decoding="async"
+              />
+              <figcaption class="cm-code__caption">666 // BLADE</figcaption>
+            </figure>
+          </div>
+
+          <div
+            class="cm-code__entry"
+            data-cm-code-entry
+            data-code="369"
+            hidden
+          >
+            <figure class="cm-code__figure">
+              <img
+                class="cm-code__image"
+                src="/images/angels_dragon_azulado_vhs.svg"
+                alt="Angels and a dragon rendered in VHS blue"
+                width="795"
+                height="1000"
+                loading="lazy"
+                decoding="async"
+              />
+              <figcaption class="cm-code__caption">369 // SERPENT</figcaption>
+            </figure>
+          </div>
+
+          <div
+            class="cm-code__entry"
+            data-cm-code-entry
+            data-code="777"
+            hidden
+          >
+            <figure class="cm-code__figure">
+              <img
+                class="cm-code__image"
+                src="/images/Minos_azulado_vhs.svg"
+                alt="Minos rendered in VHS blue"
+                width="1260"
+                height="1032"
+                loading="lazy"
+                decoding="async"
+              />
+              <figcaption class="cm-code__caption">777 // JUDGE</figcaption>
+            </figure>
+          </div>
+
+          <p
+            class="cm-paragraph cm-code__random"
+            data-cm-code-random
+            hidden
+          ></p>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -194,6 +329,137 @@ const sectionData = sectionEntries.map(
     margin-top: 1.6rem;
   }
 
+  .cm-code {
+    width: 100%;
+    max-width: 36rem;
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .cm-code__title {
+    margin: 0 0 clamp(0.8rem, 2vh, 1.25rem);
+    font-size: clamp(1.5rem, 2.2vw, 2.1rem);
+  }
+
+  .cm-code__form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.6rem;
+  }
+
+  .cm-code__input {
+    width: min(12rem, 60%);
+    padding: 0.5rem 0.75rem;
+    font: inherit;
+    font-size: 1.15rem;
+    letter-spacing: 0.2em;
+    text-align: center;
+    color: var(--color-title);
+    background-color: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: 0.35rem;
+    outline: none;
+    appearance: textfield;
+    -moz-appearance: textfield;
+  }
+
+  .cm-code__input::placeholder {
+    color: var(--color-border);
+    opacity: 1;
+    letter-spacing: 0.2em;
+  }
+
+  .cm-code__input::-webkit-outer-spin-button,
+  .cm-code__input::-webkit-inner-spin-button {
+    margin: 0;
+    -webkit-appearance: none;
+  }
+
+  .cm-code__input:focus-visible {
+    border-color: var(--color-text);
+    box-shadow:
+      0 0 0 1px var(--color-text),
+      0 0 18px rgba(157, 199, 240, 0.35);
+  }
+
+  .cm-code__submit {
+    padding: 0.5rem 1.1rem;
+    font: inherit;
+    font-size: 1rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-title);
+    background-color: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: 0.35rem;
+    cursor: pointer;
+  }
+
+  .cm-code__submit:hover,
+  .cm-code__submit:focus-visible {
+    color: var(--color-text);
+    border-color: var(--color-text);
+    outline: none;
+  }
+
+  .cm-code__hint {
+    min-height: 1.4em;
+    margin: 0.8rem 0 0;
+    font-size: 0.9rem;
+    color: var(--color-text);
+  }
+
+  .cm-code__result {
+    width: 100%;
+  }
+
+  .cm-code__result:not([hidden]) {
+    animation: cm-code-reveal 0.35s ease-out both;
+  }
+
+  .cm-code__figure {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+    margin: 0;
+  }
+
+  .cm-code__image {
+    width: auto;
+    max-width: 100%;
+    max-height: min(54vh, 32rem);
+    margin-inline: auto;
+    filter: drop-shadow(0 0 22px rgba(59, 123, 196, 0.35));
+  }
+
+  html[data-side='b'] .cm-code__image {
+    filter: drop-shadow(0 0 22px rgba(255, 90, 120, 0.35));
+  }
+
+  .cm-code__caption {
+    font-size: clamp(0.75rem, 1vw, 0.9rem);
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--color-title);
+  }
+
+  .cm-code__random {
+    text-align: left;
+  }
+
+  @keyframes cm-code-reveal {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
   .cm-caret {
     display: inline-block;
     margin-left: 0.08em;
@@ -225,6 +491,10 @@ const sectionData = sectionEntries.map(
 
   @media (prefers-reduced-motion: reduce) {
     .cm-caret {
+      animation: none;
+    }
+
+    .cm-code__result:not([hidden]) {
       animation: none;
     }
   }
