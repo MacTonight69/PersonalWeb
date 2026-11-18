@@ -45,6 +45,17 @@ const transitionVideo = document.querySelector<HTMLVideoElement>('[data-transiti
 const metaTheme = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
 const dataNode = document.getElementById('sections-data');
 
+const codePanel = document.querySelector<HTMLElement>('[data-cm-code]');
+const codePrompt = document.querySelector<HTMLElement>('[data-cm-code-prompt]');
+const codeForm = document.querySelector<HTMLFormElement>('[data-cm-code-form]');
+const codeInput = document.querySelector<HTMLInputElement>('[data-cm-code-input]');
+const codeHint = document.querySelector<HTMLElement>('[data-cm-code-hint]');
+const codeResult = document.querySelector<HTMLElement>('[data-cm-code-result]');
+const codeRandom = document.querySelector<HTMLElement>('[data-cm-code-random]');
+const codeEntries = Array.from(
+  document.querySelectorAll<HTMLElement>('[data-cm-code-entry]'),
+);
+
 const sections: SectionData[] = dataNode?.textContent
   ? (JSON.parse(dataNode.textContent) as SectionData[])
   : [];
@@ -338,6 +349,152 @@ function startActiveCipher(): void {
 }
 
 /* ------------------------------------------------------------------ */
+/* Código secreto de la animación de CD                                */
+/* ------------------------------------------------------------------ */
+
+const SECRET_CLICKS = 8;
+const SECRET_WINDOW = 1500;
+const UNKNOWN_MESSAGES = [
+  'The layer does not recognize {code}.',
+  'No record of {code} exists in this archive.',
+  'Static answers in place of {code}.',
+  'The tape rejects {code} and keeps spinning.',
+  'You knocked with {code}. Nothing opened.',
+  'A voice repeats {code} backwards, then goes silent.',
+  'The signal for {code} dissolves into interference.',
+  'There is no room behind {code}. Someone was just here.',
+];
+let secretClicks = 0;
+let secretTimer: number | undefined;
+
+function resetCodePanel(): void {
+  if (!codePanel) return;
+
+  codePanel.hidden = true;
+  if (codePrompt) codePrompt.hidden = false;
+  if (codeResult) codeResult.hidden = true;
+  if (codeHint) codeHint.textContent = '';
+  if (codeInput) codeInput.value = '';
+  codeEntries.forEach((entry) => {
+    entry.hidden = true;
+  });
+  if (codeRandom) {
+    codeRandom.hidden = true;
+    codeRandom.textContent = '';
+  }
+}
+
+function openCodePanel(): void {
+  if (!codePanel || !welcome || !sectionEl || !card) return;
+
+  runToken += 1;
+  activeId = null;
+  abortTyping();
+  document.querySelectorAll('.cm-flash').forEach((flash) => flash.remove());
+
+  resetCodePanel();
+  card.classList.remove('is-section', 'is-binary');
+  card.setAttribute('aria-busy', 'false');
+  welcome.hidden = true;
+  sectionEl.hidden = true;
+  sectionEl.textContent = '';
+  sectionEl.classList.remove('is-binary');
+  codePanel.hidden = false;
+
+  if (srText) srText.textContent = 'Enter a numeric code.';
+  if (statusRegion) statusRegion.textContent = 'Code entry';
+  if (viewport) viewport.scrollTop = 0;
+
+  if (window.matchMedia('(max-width: 54rem)').matches) {
+    card.scrollIntoView({
+      behavior: reduceMotion.matches ? 'auto' : 'smooth',
+      block: 'start',
+    });
+  }
+
+  window.requestAnimationFrame(() => codeInput?.focus());
+}
+
+function randomUnknownText(code: string): string {
+  const message =
+    UNKNOWN_MESSAGES[Math.floor(Math.random() * UNKNOWN_MESSAGES.length)];
+  return message.replace('{code}', code);
+}
+
+function showCodeContent(code: string): void {
+  if (!codePrompt || !codeResult) return;
+
+  codePrompt.hidden = true;
+  codeResult.hidden = false;
+  codeEntries.forEach((entry) => {
+    entry.hidden = entry.dataset.code !== code;
+  });
+
+  const entry = codeEntries.find((item) => item.dataset.code === code);
+  if (entry) {
+    if (codeRandom) {
+      codeRandom.hidden = true;
+      codeRandom.textContent = '';
+    }
+
+    const image = entry.querySelector<HTMLImageElement>('img');
+    if (srText) srText.textContent = image?.alt ?? `Code ${code}`;
+    if (statusRegion) statusRegion.textContent = `Code ${code} accepted`;
+
+    card?.focus({ preventScroll: true });
+    return;
+  }
+
+  if (!codeRandom) return;
+
+  const message = randomUnknownText(code);
+  codeRandom.hidden = false;
+  codeRandom.textContent = message;
+
+  if (srText) srText.textContent = message;
+  if (statusRegion) statusRegion.textContent = `Unknown code ${code}`;
+
+  const node = codeRandom.firstChild;
+  if (!reduceMotion.matches && node instanceof Text) {
+    startTyping([{ node, full: message, speed: 26 }], {
+      scrollRoot: viewport,
+    });
+  }
+
+  card?.focus({ preventScroll: true });
+}
+
+function onCodeSubmit(event: Event): void {
+  event.preventDefault();
+
+  const raw = codeInput?.value.trim() ?? '';
+  if (!/^\d+$/.test(raw)) {
+    if (codeHint) codeHint.textContent = 'Enter a whole number.';
+    codeInput?.focus();
+    return;
+  }
+
+  if (codeHint) codeHint.textContent = '';
+  if (codeInput) codeInput.value = '';
+  showCodeContent(String(Number(raw)));
+}
+
+function onNavVisualClick(): void {
+  secretClicks += 1;
+  window.clearTimeout(secretTimer);
+
+  if (secretClicks >= SECRET_CLICKS) {
+    secretClicks = 0;
+    openCodePanel();
+    return;
+  }
+
+  secretTimer = window.setTimeout(() => {
+    secretClicks = 0;
+  }, SECRET_WINDOW);
+}
+
+/* ------------------------------------------------------------------ */
 /* Sections                                                            */
 /* ------------------------------------------------------------------ */
 
@@ -378,6 +535,7 @@ function selectTab(id: string): void {
 function renderSection(section: SectionData, animate: boolean): void {
   if (!sectionEl || !welcome || !card) return;
 
+  resetCodePanel();
   abortTyping();
   welcome.hidden = true;
   sectionEl.hidden = false;
@@ -468,6 +626,7 @@ function renderSection(section: SectionData, animate: boolean): void {
 function showWelcome(): void {
   if (!welcome || !sectionEl || !card) return;
 
+  resetCodePanel();
   abortTyping();
   document.querySelectorAll('.cm-flash').forEach((flash) => flash.remove());
   activeId = null;
@@ -492,6 +651,7 @@ async function activateHome(): Promise<void> {
   const run = ++runToken;
   activeId = null;
   selectTab(`${side}-home`);
+  resetCodePanel();
   abortTyping();
   document.querySelectorAll('.cm-flash').forEach((flash) => flash.remove());
 
@@ -614,6 +774,7 @@ async function activateSection(id: string): Promise<void> {
   const run = ++runToken;
   activeId = id;
   selectTab(id);
+  resetCodePanel();
   abortTyping();
 
   const intro = document.querySelector<HTMLElement>('.side-a-intro');
@@ -784,6 +945,9 @@ function init(): void {
   navLists.b?.addEventListener('click', onNavClick);
   navLists.a?.addEventListener('keydown', onNavKeydown);
   navLists.b?.addEventListener('keydown', onNavKeydown);
+
+  navVisual?.addEventListener('click', onNavVisualClick);
+  codeForm?.addEventListener('submit', onCodeSubmit);
 
   card?.addEventListener('click', () => {
     activeTyping?.complete();
