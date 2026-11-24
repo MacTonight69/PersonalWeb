@@ -75,105 +75,35 @@ const sectionData = sectionEntries.map(
         </div>
 
         <div class="cm-code__result" data-cm-code-result hidden>
-          <div
-            class="cm-code__entry"
-            data-cm-code-entry
-            data-code="616"
-            hidden
-          >
-            <figure class="cm-code__figure">
-              <img
-                class="cm-code__image"
-                src="/images/pentagrama-baphomet_azulado_vhs.svg"
-                alt="Baphomet pentagram rendered in VHS blue"
-                width="520"
-                height="520"
-                loading="lazy"
-                decoding="async"
-              />
-              <figcaption class="cm-code__caption">616 // SIGIL</figcaption>
-            </figure>
-          </div>
-
-          <div
-            class="cm-code__entry"
-            data-cm-code-entry
-            data-code="333"
-            hidden
-          >
-            <figure class="cm-code__figure">
-              <img
-                class="cm-code__image"
-                src="/images/angels_azulado_vhs.svg"
-                alt="Angels rendered in VHS blue"
-                width="643"
-                height="814"
-                loading="lazy"
-                decoding="async"
-              />
-              <figcaption class="cm-code__caption">333 // CHOIR</figcaption>
-            </figure>
-          </div>
-
-          <div
-            class="cm-code__entry"
-            data-cm-code-entry
-            data-code="666"
-            hidden
-          >
-            <figure class="cm-code__figure">
-              <img
-                class="cm-code__image"
-                src="/images/angel_sword_azulado_vhs.svg"
-                alt="Angel holding a sword rendered in VHS blue"
-                width="778"
-                height="1000"
-                loading="lazy"
-                decoding="async"
-              />
-              <figcaption class="cm-code__caption">666 // BLADE</figcaption>
-            </figure>
-          </div>
-
-          <div
-            class="cm-code__entry"
-            data-cm-code-entry
-            data-code="369"
-            hidden
-          >
-            <figure class="cm-code__figure">
-              <img
-                class="cm-code__image"
-                src="/images/angels_dragon_azulado_vhs.svg"
-                alt="Angels and a dragon rendered in VHS blue"
-                width="795"
-                height="1000"
-                loading="lazy"
-                decoding="async"
-              />
-              <figcaption class="cm-code__caption">369 // SERPENT</figcaption>
-            </figure>
-          </div>
-
-          <div
-            class="cm-code__entry"
-            data-cm-code-entry
-            data-code="777"
-            hidden
-          >
-            <figure class="cm-code__figure">
-              <img
-                class="cm-code__image"
-                src="/images/Minos_azulado_vhs.svg"
-                alt="Minos rendered in VHS blue"
-                width="1260"
-                height="1032"
-                loading="lazy"
-                decoding="async"
-              />
-              <figcaption class="cm-code__caption">777 // JUDGE</figcaption>
-            </figure>
-          </div>
+          <figure class="cm-code__figure" data-cm-code-figure hidden>
+            <img
+              class="cm-code__image"
+              data-cm-code-image
+              alt=""
+              decoding="async"
+            />
+            <video
+              class="cm-code__video"
+              data-cm-code-video
+              autoplay
+              loop
+              muted
+              playsinline
+              aria-hidden="true"
+              hidden
+            ></video>
+            <figcaption
+              class="cm-code__caption"
+              data-cm-code-caption
+            ></figcaption>
+            <a
+              class="cm-code__source"
+              data-cm-code-source
+              target="_blank"
+              rel="noopener noreferrer"
+              hidden
+            ></a>
+          </figure>
 
           <p
             class="cm-paragraph cm-code__random"
@@ -383,6 +313,12 @@ const sectionData = sectionEntries.map(
       0 0 18px rgba(157, 199, 240, 0.35);
   }
 
+  html[data-side='c'] .cm-code__input:focus-visible {
+    box-shadow:
+      0 0 0 1px var(--color-text),
+      0 0 18px rgba(255, 255, 255, 0.25);
+  }
+
   .cm-code__submit {
     padding: 0.5rem 1.1rem;
     font: inherit;
@@ -438,11 +374,40 @@ const sectionData = sectionEntries.map(
     filter: drop-shadow(0 0 22px rgba(255, 90, 120, 0.35));
   }
 
+  html[data-side='c'] .cm-code__image {
+    filter: none;
+  }
+
+  .cm-code__video {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    max-height: min(54vh, 32rem);
+    height: auto;
+    margin-inline: auto;
+    background-color: #000;
+  }
+
   .cm-code__caption {
     font-size: clamp(0.75rem, 1vw, 0.9rem);
     letter-spacing: 0.24em;
     text-transform: uppercase;
     color: var(--color-title);
+  }
+
+  .cm-code__source {
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-text);
+    opacity: 0.7;
+    text-decoration: none;
+  }
+
+  .cm-code__source:hover,
+  .cm-code__source:focus-visible {
+    opacity: 1;
+    text-decoration: underline;
   }
 
   .cm-code__random {
@@ -465,16 +430,6 @@ const sectionData = sectionEntries.map(
     margin-left: 0.08em;
     color: currentColor;
     animation: cm-caret 0.8s steps(1, end) infinite;
-  }
-
-  .cm-flash {
-    position: absolute;
-    inset: 0;
-    z-index: 5;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    pointer-events: none;
   }
 
   @keyframes cm-caret {

@@ -32,6 +32,17 @@ html[data-side='b'] {
   background-color: #140208;
 }
 
+html[data-side='c'] {
+  --color-background: #000000;
+  --color-surface: #000000;
+  --color-text: #e8e8e8;
+  --color-title: #ffffff;
+  --color-border: #ffffff;
+  --font-sans: 'EASVHS', 'Courier New', monospace;
+
+  background-color: #000000;
+}
+
 body {
   background-color: var(--color-background);
   color: var(--color-text);
@@ -49,8 +60,14 @@ html[data-side='b'] ::selection {
   color: #ffffff;
 }
 
+html[data-side='c'] ::selection {
+  background-color: #ffffff;
+  color: #000000;
+}
+
 /* El filtro VHS pertenece únicamente a Side A. */
-html[data-side='b'] .vhs-overlay {
+html[data-side='b'] .vhs-overlay,
+html[data-side='c'] .vhs-overlay {
   display: none;
 }
 
@@ -62,4 +79,24 @@ html[data-side='b'] .card {
 
 html[data-side='b'] .card--header {
   background-color: #000000;
+}
+
+/* Side C es una cara oculta: sin banner y con las tres tarjetas a altura completa. */
+html[data-side='c'] .card--header {
+  display: none;
+}
+
+html[data-side='c'] .main-card {
+  grid-template-areas: 'left center right';
+  grid-template-rows: minmax(0, 1fr);
+}
+
+@media (max-width: 54rem) {
+  html[data-side='c'] .main-card {
+    grid-template-areas:
+      'left'
+      'center'
+      'right';
+    grid-template-rows: none;
+  }
 }

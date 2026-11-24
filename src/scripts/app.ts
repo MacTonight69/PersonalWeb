@@ -1,4 +1,5 @@
-type Side = 'a' | 'b';
+type ClassicSide = 'a' | 'b';
+type Side = ClassicSide | 'c';
 
 interface SectionBlock {
   type: 'paragraph' | 'heading' | 'terms';
@@ -31,7 +32,7 @@ const sectionEl = document.querySelector<HTMLElement>('[data-cm-section]');
 const srText = document.querySelector<HTMLElement>('[data-cm-sr]');
 const statusRegion = document.querySelector<HTMLElement>('[data-cm-status]');
 const toggleButton = document.querySelector<HTMLButtonElement>('[data-side-toggle]');
-const navLists: Record<Side, HTMLElement | null> = {
+const navLists: Record<ClassicSide, HTMLElement | null> = {
   a: document.querySelector<HTMLElement>('[data-nav-list="a"]'),
   b: document.querySelector<HTMLElement>('[data-nav-list="b"]'),
 };
@@ -51,10 +52,12 @@ const codeForm = document.querySelector<HTMLFormElement>('[data-cm-code-form]');
 const codeInput = document.querySelector<HTMLInputElement>('[data-cm-code-input]');
 const codeHint = document.querySelector<HTMLElement>('[data-cm-code-hint]');
 const codeResult = document.querySelector<HTMLElement>('[data-cm-code-result]');
+const codeFigure = document.querySelector<HTMLElement>('[data-cm-code-figure]');
+const codeImage = document.querySelector<HTMLImageElement>('[data-cm-code-image]');
+const codeVideo = document.querySelector<HTMLVideoElement>('[data-cm-code-video]');
+const codeCaption = document.querySelector<HTMLElement>('[data-cm-code-caption]');
+const codeSource = document.querySelector<HTMLAnchorElement>('[data-cm-code-source]');
 const codeRandom = document.querySelector<HTMLElement>('[data-cm-code-random]');
-const codeEntries = Array.from(
-  document.querySelectorAll<HTMLElement>('[data-cm-code-entry]'),
-);
 
 const sections: SectionData[] = dataNode?.textContent
   ? (JSON.parse(dataNode.textContent) as SectionData[])
@@ -73,8 +76,13 @@ const HOME_TEXT: Record<Side, { title: string; text: string }> = {
     title: 'Layer: 088',
     text: 'Feel free to look and browse this entire website.',
   },
+  c: {
+    title: 'Layer: 404',
+    text: 'There is no home here. The door only opens one way.',
+  },
 };
 let side: Side = 'a';
+let sideBeforeC: ClassicSide = 'a';
 let activeId: string | null = null;
 let activeTabId: string | null = null;
 let runToken = 0;
@@ -349,11 +357,9 @@ function startActiveCipher(): void {
 }
 
 /* ------------------------------------------------------------------ */
-/* Código secreto de la animación de CD                                */
+/* Código secreto de la PFP                                            */
 /* ------------------------------------------------------------------ */
 
-const SECRET_CLICKS = 8;
-const SECRET_WINDOW = 1500;
 const UNKNOWN_MESSAGES = [
   'The layer does not recognize {code}.',
   'No record of {code} exists in this archive.',
@@ -364,8 +370,78 @@ const UNKNOWN_MESSAGES = [
   'The signal for {code} dissolves into interference.',
   'There is no room behind {code}. Someone was just here.',
 ];
-let secretClicks = 0;
-let secretTimer: number | undefined;
+
+interface CodeImage {
+  src: string;
+  width: number;
+  height: number;
+  video?: boolean;
+  href?: string;
+}
+
+const CODE_IMAGES: Record<string, CodeImage> = {
+  '616': { src: '/images/616.svg', width: 520, height: 520 },
+  '333': { src: '/images/333.svg', width: 643, height: 814 },
+  '666': { src: '/images/666.svg', width: 778, height: 1000 },
+  '369': { src: '/images/369.svg', width: 795, height: 1000 },
+  '777': { src: '/images/777.svg', width: 1260, height: 1032 },
+  '1001': { src: '/images/1001.gif', width: 500, height: 500 },
+  '1111': { src: '/images/1111.jpeg', width: 736, height: 607 },
+  '312': { src: '/images/312.jpeg', width: 736, height: 920 },
+  '3301': { src: '/images/3301.jpeg', width: 736, height: 1041 },
+  '333333333': {
+    src: '/images/333333333.jpeg',
+    width: 736,
+    height: 1105,
+  },
+  '53': { src: '/images/53.jpeg', width: 676, height: 1194 },
+  '609': { src: '/images/609.jpeg', width: 736, height: 1308 },
+  '79': { src: '/images/79.jpeg', width: 736, height: 920 },
+  '2004': {
+    src: '/media/codes/2004.mp4',
+    width: 640,
+    height: 640,
+    video: true,
+    href: 'https://tenor.com/view/yume-nikki-madotsuki-jump-ending-gif-26637933',
+  },
+  '69': {
+    src: '/media/codes/69.mp4',
+    width: 498,
+    height: 360,
+    video: true,
+    href: 'https://tenor.com/view/rpgmaker-yume-nikki-rain-raining-madotsuki-gif-16609780199635110009',
+  },
+  '123': {
+    src: '/media/codes/123.mp4',
+    width: 496,
+    height: 496,
+    video: true,
+    href: 'https://tenor.com/view/rumia-touhou-jumpscare-gif-17190961014119105366',
+  },
+  '321': {
+    src: '/media/codes/321.mp4',
+    width: 640,
+    height: 582,
+    video: true,
+    href: 'https://tenor.com/view/rumia-dance-cute-fortnite-moves-gif-16580646',
+  },
+  '88': {
+    src: '/media/codes/88.mp4',
+    width: 640,
+    height: 424,
+    video: true,
+    href: 'https://tenor.com/view/nra-88th-div-marching-gif-22780604',
+  },
+  '888': {
+    src: '/media/codes/888.mp4',
+    width: 154,
+    height: 154,
+    video: true,
+    href: 'https://tenor.com/view/bouncing-marisa-fumo-marisa-kirisame-touhou-fumo-gif-16962360816851147092',
+  },
+};
+
+let isEnteringC = false;
 
 function resetCodePanel(): void {
   if (!codePanel) return;
@@ -375,9 +451,26 @@ function resetCodePanel(): void {
   if (codeResult) codeResult.hidden = true;
   if (codeHint) codeHint.textContent = '';
   if (codeInput) codeInput.value = '';
-  codeEntries.forEach((entry) => {
-    entry.hidden = true;
-  });
+  if (codeFigure) codeFigure.hidden = true;
+  if (codeImage) {
+    codeImage.onerror = null;
+    codeImage.removeAttribute('src');
+    codeImage.alt = '';
+    codeImage.hidden = false;
+  }
+  if (codeVideo) {
+    codeVideo.pause();
+    codeVideo.onerror = null;
+    codeVideo.removeAttribute('src');
+    codeVideo.load();
+    codeVideo.hidden = true;
+  }
+  if (codeSource) {
+    codeSource.hidden = true;
+    codeSource.removeAttribute('href');
+    codeSource.textContent = '';
+  }
+  if (codeCaption) codeCaption.textContent = '';
   if (codeRandom) {
     codeRandom.hidden = true;
     codeRandom.textContent = '';
@@ -385,7 +478,7 @@ function resetCodePanel(): void {
 }
 
 function openCodePanel(): void {
-  if (!codePanel || !welcome || !sectionEl || !card) return;
+  if (isEnteringC || !codePanel || !welcome || !sectionEl || !card) return;
 
   runToken += 1;
   activeId = null;
@@ -421,30 +514,131 @@ function randomUnknownText(code: string): string {
   return message.replace('{code}', code);
 }
 
-function showCodeContent(code: string): void {
-  if (!codePrompt || !codeResult) return;
+let sectionCodeMap: Map<string, string> | null = null;
 
+function getSectionCodeMap(): Map<string, string> {
+  if (sectionCodeMap) return sectionCodeMap;
+
+  const map = new Map<string, string>();
+  let code = 1;
+
+  for (const list of [navLists.a, navLists.b]) {
+    if (!list) continue;
+
+    list
+      .querySelectorAll<HTMLButtonElement>('[data-section-id]')
+      .forEach((tab) => {
+        const id = tab.dataset.sectionId;
+        if (!id || isHomeId(id)) return;
+        map.set(String(code), id);
+        code += 1;
+      });
+  }
+
+  sectionCodeMap = map;
+  return map;
+}
+
+function renderCodeResult(code: string): void {
+  if (!codePanel || !codePrompt || !codeResult) return;
+
+  codePanel.hidden = false;
   codePrompt.hidden = true;
   codeResult.hidden = false;
-  codeEntries.forEach((entry) => {
-    entry.hidden = entry.dataset.code !== code;
-  });
+  if (viewport) viewport.scrollTop = 0;
 
-  const entry = codeEntries.find((item) => item.dataset.code === code);
+  const entry = CODE_IMAGES[code];
   if (entry) {
     if (codeRandom) {
       codeRandom.hidden = true;
       codeRandom.textContent = '';
     }
 
-    const image = entry.querySelector<HTMLImageElement>('img');
-    if (srText) srText.textContent = image?.alt ?? `Code ${code}`;
-    if (statusRegion) statusRegion.textContent = `Code ${code} accepted`;
+    const isVideo = entry.video === true;
 
+    if (codeFigure && codeCaption) {
+      codeFigure.hidden = false;
+      codeCaption.textContent = `CODE ${code}`;
+    }
+
+    if (codeImage) {
+      codeImage.hidden = isVideo;
+      if (!isVideo) {
+        codeImage.alt = `Code ${code}`;
+        codeImage.width = entry.width;
+        codeImage.height = entry.height;
+        codeImage.onerror = () => {
+          if (codeCaption) codeCaption.textContent = `CODE ${code} // NO SIGNAL`;
+        };
+        codeImage.src = entry.src;
+      } else {
+        codeImage.onerror = null;
+        codeImage.removeAttribute('src');
+      }
+    }
+
+    if (codeVideo) {
+      codeVideo.hidden = !isVideo;
+      if (isVideo) {
+        codeVideo.width = entry.width;
+        codeVideo.height = entry.height;
+        codeVideo.muted = true;
+        codeVideo.loop = true;
+        codeVideo.autoplay = true;
+        codeVideo.playsInline = true;
+        codeVideo.onerror = () => {
+          if (codeCaption) codeCaption.textContent = `CODE ${code} // NO SIGNAL`;
+        };
+        codeVideo.src = entry.src;
+        const playback = codeVideo.play();
+        if (playback) playback.catch(() => {});
+      } else {
+        codeVideo.pause();
+        codeVideo.onerror = null;
+        codeVideo.removeAttribute('src');
+        codeVideo.load();
+      }
+    }
+
+    if (codeSource) {
+      if (entry.href) {
+        codeSource.href = entry.href;
+        codeSource.textContent = 'TENOR // SOURCE';
+        codeSource.hidden = false;
+      } else {
+        codeSource.hidden = true;
+        codeSource.removeAttribute('href');
+        codeSource.textContent = '';
+      }
+    }
+
+    if (srText) {
+      srText.textContent = isVideo
+        ? `Animation for code ${code}`
+        : `Image for code ${code}`;
+    }
+    if (statusRegion) statusRegion.textContent = `Code ${code} accepted`;
     card?.focus({ preventScroll: true });
     return;
   }
 
+  if (codeFigure) codeFigure.hidden = true;
+  if (codeImage) {
+    codeImage.onerror = null;
+    codeImage.removeAttribute('src');
+  }
+  if (codeVideo) {
+    codeVideo.pause();
+    codeVideo.onerror = null;
+    codeVideo.removeAttribute('src');
+    codeVideo.load();
+    codeVideo.hidden = true;
+  }
+  if (codeSource) {
+    codeSource.hidden = true;
+    codeSource.removeAttribute('href');
+    codeSource.textContent = '';
+  }
   if (!codeRandom) return;
 
   const message = randomUnknownText(code);
@@ -464,6 +658,75 @@ function showCodeContent(code: string): void {
   card?.focus({ preventScroll: true });
 }
 
+async function enterSideC(code: string): Promise<void> {
+  if (isEnteringC) return;
+
+  if (side !== 'c') sideBeforeC = side;
+  isEnteringC = true;
+
+  const run = ++runToken;
+  abortTyping();
+  document.querySelectorAll('.cm-flash').forEach((flash) => flash.remove());
+  resetCodePanel();
+  activeId = null;
+
+  if (welcome) welcome.hidden = true;
+  if (sectionEl) {
+    sectionEl.hidden = true;
+    sectionEl.textContent = '';
+    sectionEl.classList.remove('is-binary');
+  }
+
+  card?.classList.remove('is-section', 'is-binary');
+  card?.setAttribute('aria-busy', reduceMotion.matches ? 'false' : 'true');
+  if (viewport) viewport.scrollTop = 0;
+
+  try {
+    if (!reduceMotion.matches) {
+      await playCardFlash(400, true);
+    }
+    if (run !== runToken) return;
+
+    const enteringFromClassic = side !== 'c';
+    side = 'c';
+    if (enteringFromClassic) {
+      applySide('c');
+      clearTabSelection();
+    }
+    renderCodeResult(code);
+    card?.setAttribute('aria-busy', 'false');
+
+    if (window.matchMedia('(max-width: 54rem)').matches) {
+      card?.scrollIntoView({
+        behavior: reduceMotion.matches ? 'auto' : 'smooth',
+        block: 'start',
+      });
+    }
+  } finally {
+    isEnteringC = false;
+  }
+}
+
+async function showCodeContent(code: string): Promise<void> {
+  if (code === '0') {
+    if (side === 'c') setSide(sideBeforeC);
+    await activateHome();
+    return;
+  }
+
+  const sectionId = getSectionCodeMap().get(code);
+  if (sectionId) {
+    const section = sectionsById.get(sectionId);
+    if (!section) return;
+
+    if (section.side !== side) setSide(section.side);
+    await activateSection(sectionId);
+    return;
+  }
+
+  await enterSideC(code);
+}
+
 function onCodeSubmit(event: Event): void {
   event.preventDefault();
 
@@ -476,22 +739,7 @@ function onCodeSubmit(event: Event): void {
 
   if (codeHint) codeHint.textContent = '';
   if (codeInput) codeInput.value = '';
-  showCodeContent(String(Number(raw)));
-}
-
-function onNavVisualClick(): void {
-  secretClicks += 1;
-  window.clearTimeout(secretTimer);
-
-  if (secretClicks >= SECRET_CLICKS) {
-    secretClicks = 0;
-    openCodePanel();
-    return;
-  }
-
-  secretTimer = window.setTimeout(() => {
-    secretClicks = 0;
-  }, SECRET_WINDOW);
+  void showCodeContent(String(Number(raw)));
 }
 
 /* ------------------------------------------------------------------ */
@@ -529,7 +777,25 @@ function selectTab(id: string): void {
   });
 
   const tab = getTab(id);
-  if (tab && card) card.setAttribute('aria-labelledby', tab.id);
+  if (tab && card) {
+    card.removeAttribute('aria-label');
+    card.setAttribute('aria-labelledby', tab.id);
+  }
+}
+
+function clearTabSelection(): void {
+  stopNavCipher();
+  activeTabId = null;
+
+  document.querySelectorAll<HTMLButtonElement>('[role="tab"]').forEach((tab) => {
+    tab.setAttribute('aria-selected', 'false');
+    tab.tabIndex = -1;
+  });
+
+  if (card) {
+    card.removeAttribute('aria-labelledby');
+    card.setAttribute('aria-label', 'Hidden content');
+  }
 }
 
 function renderSection(section: SectionData, animate: boolean): void {
@@ -640,13 +906,21 @@ function showWelcome(): void {
   welcome.hidden = false;
 
   if (srText) srText.textContent = '';
-  if (statusRegion) statusRegion.textContent = '';
   if (viewport) viewport.scrollTop = 0;
-  selectTab(`${side}-home`);
+
+  if (side === 'c') {
+    if (statusRegion) statusRegion.textContent = 'Hidden side';
+    clearTabSelection();
+  } else {
+    if (statusRegion) statusRegion.textContent = '';
+    selectTab(`${side}-home`);
+  }
 }
 
 async function activateHome(): Promise<void> {
   if (!welcome || !sectionEl || !card) return;
+
+  if (side === 'c') setSide(sideBeforeC);
 
   const run = ++runToken;
   activeId = null;
@@ -730,7 +1004,7 @@ function playTransitionVideo(): Promise<void> {
     window.addEventListener('keydown', onKey);
     transitionVideo.addEventListener('ended', onEnded);
     transitionVideo.addEventListener('error', onError);
-    timer = window.setTimeout(finish, 8000);
+    timer = window.setTimeout(finish, 10000);
 
     transitionVideo.muted = true;
     try {
@@ -749,15 +1023,18 @@ function hideTransition(): void {
   transitionVideo?.pause();
 }
 
-function playCardFlash(duration: number): Promise<void> {
+function playCardFlash(
+  duration: number,
+  fullScreen = false,
+): Promise<void> {
   if (!card) return Promise.resolve();
 
   const flash = document.createElement('img');
-  flash.className = 'cm-flash';
+  flash.className = fullScreen ? 'cm-flash cm-flash--full' : 'cm-flash';
   flash.src = '/media/Intro_Side_A.gif';
   flash.alt = '';
   flash.setAttribute('aria-hidden', 'true');
-  card.append(flash);
+  (fullScreen ? document.body : card).append(flash);
 
   return new Promise((resolve) => {
     window.setTimeout(() => {
@@ -805,13 +1082,63 @@ async function activateSection(id: string): Promise<void> {
 
 function setImageForSide(image: HTMLImageElement | null, key: Side): void {
   if (!image) return;
-  const src = key === 'a' ? image.dataset.srcA : image.dataset.srcB;
-  const width = key === 'a' ? image.dataset.widthA : image.dataset.widthB;
-  const height = key === 'a' ? image.dataset.heightA : image.dataset.heightB;
+
+  const src =
+    key === 'a'
+      ? image.dataset.srcA
+      : key === 'b'
+        ? image.dataset.srcB
+        : image.dataset.srcC;
+  const width =
+    key === 'a'
+      ? image.dataset.widthA
+      : key === 'b'
+        ? image.dataset.widthB
+        : image.dataset.widthC;
+  const height =
+    key === 'a'
+      ? image.dataset.heightA
+      : key === 'b'
+        ? image.dataset.heightB
+        : image.dataset.heightC;
 
   if (src) image.src = src;
   if (width) image.width = Number(width);
   if (height) image.height = Number(height);
+}
+
+function updateSideToggle(next: Side): void {
+  if (!toggleButton) return;
+
+  if (next === 'c') {
+    toggleButton.textContent = 'GO BACK';
+    toggleButton.setAttribute('aria-label', 'Go back');
+    toggleButton.setAttribute('title', 'Go back');
+    return;
+  }
+
+  const target = next === 'a' ? 'Side B' : 'Side A';
+  toggleButton.textContent = target;
+  toggleButton.setAttribute('aria-label', `Switch to ${target}`);
+  toggleButton.setAttribute('title', `Switch to ${target}`);
+}
+
+function applySide(next: Side): void {
+  root.dataset.side = next;
+  updateSideToggle(next);
+
+  if (navLists.a) navLists.a.hidden = next !== 'a';
+  if (navLists.b) navLists.b.hidden = next !== 'b';
+
+  setImageForSide(pfp, next);
+  setImageForSide(navVisual, next);
+  if (next !== 'c') setImageForSide(banner, next);
+
+  if (pfp) pfp.alt = next === 'c' ? 'Madotsuki spinning' : 'Profile picture';
+
+  if (metaTheme) {
+    metaTheme.setAttribute('content', next === 'b' ? '#140208' : '#000000');
+  }
 }
 
 function setSide(next: Side): void {
@@ -822,40 +1149,26 @@ function setSide(next: Side): void {
   abortTyping();
   document.querySelectorAll('.cm-flash').forEach((flash) => flash.remove());
 
-  root.dataset.side = side;
-
-  const target = side === 'a' ? 'Side B' : 'Side A';
-  if (toggleButton) {
-    toggleButton.textContent = target;
-    toggleButton.setAttribute('aria-label', `Switch to ${target}`);
-    toggleButton.setAttribute('title', `Switch to ${target}`);
-  }
-
-  if (navLists.a) navLists.a.hidden = side !== 'a';
-  if (navLists.b) navLists.b.hidden = side !== 'b';
-
-  setImageForSide(pfp, side);
-  setImageForSide(navVisual, side);
-  setImageForSide(banner, side);
-
-  if (metaTheme) {
-    metaTheme.setAttribute('content', side === 'a' ? '#000000' : '#140208');
-  }
-
+  applySide(next);
   showWelcome();
 }
 
 let isChangingSide = false;
 
 async function changeSide(): Promise<void> {
-  if (isChangingSide) return;
+  if (isChangingSide || isEnteringC) return;
+
+  if (side === 'c') {
+    setSide(sideBeforeC);
+    return;
+  }
 
   stopNavCipher();
 
   const intro = document.querySelector<HTMLElement>('.side-a-intro');
   if (intro && !intro.hidden) intro.hidden = true;
 
-  const next: Side = side === 'a' ? 'b' : 'a';
+  const next: ClassicSide = side === 'a' ? 'b' : 'a';
 
   if (reduceMotion.matches) {
     setSide(next);
@@ -865,18 +1178,18 @@ async function changeSide(): Promise<void> {
   isChangingSide = true;
   let sideApplied = false;
 
-  const applySide = (): void => {
+  const commitSide = (): void => {
     if (sideApplied) return;
     sideApplied = true;
     setSide(next);
   };
 
   const playback = playTransitionVideo();
-  const switchTimer = window.setTimeout(applySide, 500);
+  const switchTimer = window.setTimeout(commitSide, 500);
 
   try {
     await playback;
-    applySide();
+    commitSide();
     hideTransition();
   } finally {
     window.clearTimeout(switchTimer);
@@ -889,6 +1202,8 @@ async function changeSide(): Promise<void> {
 /* ------------------------------------------------------------------ */
 
 function onNavClick(event: Event): void {
+  if (isEnteringC) return;
+
   const target = event.target;
   if (!(target instanceof Element)) return;
 
@@ -904,6 +1219,8 @@ function onNavClick(event: Event): void {
 }
 
 function onNavKeydown(event: KeyboardEvent): void {
+  if (isEnteringC) return;
+
   const list = event.currentTarget as HTMLElement;
   if (!['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) return;
 
@@ -946,7 +1263,7 @@ function init(): void {
   navLists.a?.addEventListener('keydown', onNavKeydown);
   navLists.b?.addEventListener('keydown', onNavKeydown);
 
-  navVisual?.addEventListener('click', onNavVisualClick);
+  pfp?.addEventListener('click', openCodePanel);
   codeForm?.addEventListener('submit', onCodeSubmit);
 
   card?.addEventListener('click', () => {
